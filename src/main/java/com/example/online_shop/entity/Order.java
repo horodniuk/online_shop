@@ -2,7 +2,6 @@ package com.example.online_shop.entity;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -10,16 +9,13 @@ import java.time.LocalDateTime;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id", nullable = false)
+    @Column(name = "order_id")
     private Long orderId;
 
-    @Column(name = "order_date", nullable = false)
+    @Column(name = "order_date")
     private LocalDateTime orderDate;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Column(name = "cost", nullable = false)
-    private BigDecimal cost;
+    @ManyToOne()
+    @JoinColumn(name = "cart_id", referencedColumnName = "cart_id")
+    private UserCart userCart;
 }

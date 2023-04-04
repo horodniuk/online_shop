@@ -1,32 +1,31 @@
 package com.example.online_shop.controller;
 
 
+import com.example.online_shop.dto.ProductDto;
 import com.example.online_shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping()
-    public String index(Model model){
-        model.addAttribute("all_products", productService.getAll());
-        return "products/index";
+    @GetMapping
+    public List<ProductDto> getAll() {
+        return productService.getAll();
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") Long id, Model model){
-        model.addAttribute("product", productService.getById(id));
-        return "products/product_id";
+    public ProductDto getById(@PathVariable("id") Long id){
+        return productService.getById(id);
     }
+
+
+
 
 }

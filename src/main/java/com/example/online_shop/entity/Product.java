@@ -14,8 +14,14 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
     private Long productId;
-    @Column(name = "name", nullable = false)
+
+    @Column(name = "name")
     private String name;
-    @Column(name = "price", nullable = false)
+
+    @Column(name = "price")
     private BigDecimal price;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id", referencedColumnName = "cart_id")
+    private UserCart userCart;
 }
