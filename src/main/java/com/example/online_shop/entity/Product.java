@@ -3,7 +3,6 @@ package com.example.online_shop.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.math.BigDecimal;
 
 
 @Entity
@@ -15,9 +14,9 @@ public class Product {
     @Column(name = "product_id")
     private Long productId;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private Double price;
 }

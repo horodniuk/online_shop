@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -15,25 +14,57 @@ public class Order {
     @Column(name = "order_id")
     private Long orderId;
 
-    @Column(name = "order_date")
+    @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
+    @OneToOne
+    @JoinColumn(name = "cart_user_id")
+    private User userCart;
+
     @ElementCollection
     @CollectionTable(name = "order_product", joinColumns = {
-                                            @JoinColumn(name = "order_id",
-                                                        referencedColumnName = "order_id")
-                    })
+            @JoinColumn(name = "order_id",
+                    referencedColumnName = "order_id")
+    })
     @MapKeyJoinColumn(name = "product_id", referencedColumnName = "product_id")
     @Column(name = "quantity")
     private Map<Product, Integer> products;
 
-    public Order() {
+    public Order(User user) {
+        this.user = user;
         this.products = new HashMap<>();
+        this.orderDate = LocalDateTime.now();
     }
 
+    public Order() {
+    }
 
+    public void addProduct(Product product, int quantity) {
+        this.products.put(product, quantity);
+    }
+
+    public void addProducts(Map<Product, Integer> products) {
+        products.forEach((key, value) -> addProduct(key, value));
+    }
+
+    public Map<Product, Integer> getProducts() {
+        return products;
+    }
+
+    public void setUserCart(User userCart) {
+        this.userCart = userCart;
+    }
+
+    public User getUserCart() {
+        return userCart;
+    }
+
+    public double getTotalPrice() {
+        return products.entrySet().stream()
+                                  .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue()).sum();
+    }
 }
