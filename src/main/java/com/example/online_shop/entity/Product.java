@@ -19,9 +19,5 @@ public class Product {
     private String name;
 
     @Column(name = "price")
-    private BigDecimal price;
-
-    @ManyToOne
-    @JoinColumn(name = "cart_id", referencedColumnName = "cart_id")
-    private UserCart userCart;
+    private Double price;
 }

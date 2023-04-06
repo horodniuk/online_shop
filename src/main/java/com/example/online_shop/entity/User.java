@@ -26,8 +26,8 @@ public class User {
     private String userEmail;
 
     @Column(name = "balance")
-    private BigDecimal balance;
+    private Double balance;
 
     @OneToMany(mappedBy = "user")
-    private List<UserCart> userCarts;
+    private List<Order> orders;
 }

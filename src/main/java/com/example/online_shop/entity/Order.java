@@ -3,6 +3,7 @@ package com.example.online_shop.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -16,6 +17,9 @@ public class Order {
     private LocalDateTime orderDate;
 
     @ManyToOne()
-    @JoinColumn(name = "cart_id", referencedColumnName = "cart_id")
-    private UserCart userCart;
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderProduct> orderProducts;
 }
