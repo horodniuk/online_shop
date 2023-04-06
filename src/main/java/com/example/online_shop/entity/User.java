@@ -41,8 +41,8 @@ public class User {
             Order tempOrder = new Order(this);
             tempOrder.addProducts(cart.getProducts());
             tempOrder.setUserCart(cart.getUserCart());
-            this.orders.add(tempOrder);
-            this.cart.getProducts().clear();
+            orders.add(tempOrder);
+            cart.getProducts().clear();
             balance -= totalPrice;
             return tempOrder;
         } else {
