@@ -35,6 +35,28 @@ public class User {
     @OneToOne(mappedBy = "userCart")
     private Order cart;
 
+    public User(String firstName, String lastName, String email, Double balance) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.balance = balance;
+        this.orders = new ArrayList<>();
+        this.cart = new Order();
+        this.cart.setUserCart(this);
+        this.orders.add(this.cart);
+    }
+
+    public User() {
+        this.orders = new ArrayList<>();
+        this.cart = new Order();
+        this.cart.setUserCart(this);
+        this.orders.add(this.cart);
+    }
+
+    public void addToCart(Product product, int quantity) {
+        cart.addProduct(product, quantity);
+    }
+
     public Order addOrderFromCart() {
         double totalPrice = cart.getTotalPrice();
         if (balance >= totalPrice) {
