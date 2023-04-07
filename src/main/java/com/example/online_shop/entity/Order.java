@@ -1,6 +1,7 @@
 package com.example.online_shop.entity;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 @Entity
 @Table(name = "orders")
+@NoArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,9 +40,6 @@ public class Order {
         this.user = user;
         this.products = new HashMap<>();
         this.orderDate = LocalDateTime.now();
-    }
-
-    public Order() {
     }
 
     public void addProduct(Product product, int quantity) {
