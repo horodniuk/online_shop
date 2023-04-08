@@ -1,9 +1,10 @@
-package com.example.online_shop.service;
+package com.example.online_shop.service.impl;
 
 import com.example.online_shop.dto.ProductDto;
 import com.example.online_shop.entity.Product;
 import com.example.online_shop.exception.ProductNotFoundException;
 import com.example.online_shop.repository.ProductRepository;
+import com.example.online_shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

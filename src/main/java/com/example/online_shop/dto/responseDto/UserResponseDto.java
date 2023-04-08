@@ -13,4 +13,5 @@ public class UserResponseDto {
     private String email;
     private Double balance;
     private List<Long> orders;
+    private Long cartId;
 }

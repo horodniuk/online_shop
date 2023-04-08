@@ -15,11 +15,15 @@ public interface UserService {
 
     UserResponseDto getUserById(Long userId);
 
+    User getUser(Long userId);
+
     UserResponseDto deleteUser(Long userId);
 
     UserResponseDto editUser(Long userId, UserRequestDto userRequestDto);
 
-    UserResponseDto addOrderFromCart(OrderRequestDto orderRequestDto,);
+    UserResponseDto addOrderFromCart(Long userId);
 
     UserResponseDto addProductToCart(ProductRequestDto productRequestDto, int quantity);
+
+    UserResponseDto removeProductFromCart(ProductRequestDto productRequestDto, int quantity);
 }
