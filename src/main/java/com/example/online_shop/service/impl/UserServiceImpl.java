@@ -78,25 +78,25 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto addOrderFromCart(Long userId) {
         User user = getUser(userId);
         Order cart = user.getCart();
-        List<Order> orders = user.getOrders();
         if (cart.getProducts().isEmpty()) {
             throw new IllegalArgumentException("The cart is empty, first you need to add products in it");
         }
+        addNewOrder(user, cart);
+        return modelMapper.map(user,UserResponseDto.class);
+    }
+
+    private static void addNewOrder(User user, Order cart) {
+        List<Order> orders = user.getOrders();
         double totalPrice = cart.getTotalPrice();
-        if (user.getBalance() >= totalPrice) {
+        double balance = user.getBalance();
+        if (balance >= totalPrice) {
             Order tempOrder = new Order(user);
             tempOrder.addProducts(cart.getProducts());
             tempOrder.setUserCart(cart.getUserCart());
             orders.add(tempOrder);
             cart.getProducts().clear();
-            balance -= totalPrice;
-            return tempOrder;
-        } else {
-            throw new IllegalArgumentException("Not enough money. Top up balance");
-        }
-
-
-        return null;
+            user.setBalance(balance - totalPrice);
+        } else throw new IllegalArgumentException("Not enough money. Top up balance");
     }
 
     @Override

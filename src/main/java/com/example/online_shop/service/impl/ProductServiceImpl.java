@@ -1,6 +1,7 @@
 package com.example.online_shop.service.impl;
 
 import com.example.online_shop.dto.ProductDto;
+import com.example.online_shop.dto.requestDto.ProductRequestDto;
 import com.example.online_shop.dto.responseDto.ProductResponseDto;
 import com.example.online_shop.entity.Product;
 import com.example.online_shop.exception.ProductNotFoundException;
@@ -21,31 +22,30 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
 
     @Override
-    public Long create(ProductDto productDto) {
-        Product product = modelMapper.map(productDto, Product.class);
-        return productRepository.save(product).getProductId();
+    public ProductResponseDto create(ProductRequestDto productRequestDto) {
+        Product product = modelMapper.map(productRequestDto, Product.class);
+        productRepository.save(product);
+        return modelMapper.map(product, ProductResponseDto.class);
     }
 
     @Override
     public ProductResponseDto getById(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(
-                () -> new ProductNotFoundException("Product with id " + productId + " not found!"));
+        Product product = getProduct(productId);
         return modelMapper.map(product, ProductResponseDto.class);
     }
 
     @Override
     public Product getProduct(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(
+        return productRepository.findById(productId).orElseThrow(
                 () -> new ProductNotFoundException("Product with id " + productId + " not found!"));
-        return product;
     }
 
 
     @Override
     public ProductResponseDto delete(Long productId) {
-
-        productRepository.deleteById(productId);
-        return null;
+        Product product = getProduct(productId);
+        productRepository.delete(product);
+        return modelMapper.map(product, ProductResponseDto.class);
     }
 
     @Override
@@ -54,5 +54,13 @@ public class ProductServiceImpl implements ProductService {
         return users.stream()
                 .map(user -> modelMapper.map(user, ProductResponseDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductResponseDto editProduct(ProductRequestDto productRequestDto, Long productId) {
+        Product product = getProduct(productId);
+        product.setName(productRequestDto.getName());
+        product.setPrice(productRequestDto.getPrice());
+        return modelMapper.map(product, ProductResponseDto.class);
     }
 }

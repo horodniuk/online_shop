@@ -52,19 +52,4 @@ public class User {
         this.cart.setUserCart(this);
         this.orders.add(this.cart);
     }
-
-    public Order addOrderFromCart() {
-        double totalPrice = cart.getTotalPrice();
-        if (balance >= totalPrice) {
-            Order tempOrder = new Order(this);
-            tempOrder.addProducts(cart.getProducts());
-            tempOrder.setUserCart(cart.getUserCart());
-            orders.add(tempOrder);
-            cart.getProducts().clear();
-            balance -= totalPrice;
-            return tempOrder;
-        } else {
-            throw new IllegalArgumentException("Not enough money. Top up balance");
-        }
-    }
 }
