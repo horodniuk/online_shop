@@ -23,7 +23,7 @@ public interface UserService {
 
     UserResponseDto addOrderFromCart(Long userId);
 
-    UserResponseDto addProductToCart(ProductRequestDto productRequestDto, int quantity);
+    UserResponseDto addProductToCart(Long productId, int quantity, Long userId);
 
-    UserResponseDto removeProductFromCart(ProductRequestDto productRequestDto, int quantity);
+    UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId);
 }

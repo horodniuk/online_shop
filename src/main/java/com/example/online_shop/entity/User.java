@@ -53,10 +53,6 @@ public class User {
         this.orders.add(this.cart);
     }
 
-    public void addToCart(Product product, int quantity) {
-        cart.addProduct(product, quantity);
-    }
-
     public Order addOrderFromCart() {
         double totalPrice = cart.getTotalPrice();
         if (balance >= totalPrice) {

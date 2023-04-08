@@ -1,6 +1,7 @@
 package com.example.online_shop.service.impl;
 
 import com.example.online_shop.dto.ProductDto;
+import com.example.online_shop.dto.responseDto.ProductResponseDto;
 import com.example.online_shop.entity.Product;
 import com.example.online_shop.exception.ProductNotFoundException;
 import com.example.online_shop.repository.ProductRepository;
@@ -26,22 +27,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto getById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(
-                () -> new ProductNotFoundException("Product with id " + id + " not found!"));
-        return modelMapper.map(product, ProductDto.class);
+    public ProductResponseDto getById(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new ProductNotFoundException("Product with id " + productId + " not found!"));
+        return modelMapper.map(product, ProductResponseDto.class);
     }
 
     @Override
-    public void delete(Long id) {
-        productRepository.deleteById(id);
+    public Product getProduct(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new ProductNotFoundException("Product with id " + productId + " not found!"));
+        return product;
+    }
+
+
+    @Override
+    public ProductResponseDto delete(Long productId) {
+
+        productRepository.deleteById(productId);
+        return null;
     }
 
     @Override
-    public List<ProductDto> getAll() {
+    public List<ProductResponseDto> getAllProducts() {
         var users = (List<Product>) productRepository.findAll();
         return users.stream()
-                .map(user -> modelMapper.map(user, ProductDto.class))
+                .map(user -> modelMapper.map(user, ProductResponseDto.class))
                 .collect(Collectors.toList());
     }
 }
