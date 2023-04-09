@@ -22,13 +22,20 @@ public class AppExceptionHandler {
     public ResponseEntity<ExceptionMessageContainer> handleUserException(UserNotFoundException exception) {
         ExceptionMessageContainer messageContainer = new ExceptionMessageContainer();
         messageContainer.setMessage(exception.getMessage());
-        return new ResponseEntity<>(messageContainer,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(messageContainer, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<ExceptionMessageContainer> handleOrderException(OrderNotFoundException exception) {
         ExceptionMessageContainer messageContainer = new ExceptionMessageContainer();
         messageContainer.setMessage(exception.getMessage());
-        return new ResponseEntity<>(messageContainer,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(messageContainer, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionMessageContainer> handlerException(IllegalArgumentException exception) {
+        ExceptionMessageContainer messageContainer = new ExceptionMessageContainer();
+        messageContainer.setMessage(exception.getMessage());
+        return new ResponseEntity<>(messageContainer, HttpStatus.BAD_REQUEST);
     }
 }
