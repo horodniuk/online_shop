@@ -1,7 +1,6 @@
 package com.example.online_shop.controller;
 
 
-import com.example.online_shop.dto.ProductDto;
 import com.example.online_shop.dto.responseDto.ProductResponseDto;
 import com.example.online_shop.service.ProductService;
 import lombok.RequiredArgsConstructor;

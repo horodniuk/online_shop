@@ -8,7 +8,6 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 @Entity
@@ -29,7 +28,7 @@ public class User {
     private String lastName;
 
     @Column(name = "email", nullable = false)
-    @Pattern(regexp = "\\w+@\\w+\\.\\D{2,3}", message = "please use pattern hello@gmail.com")
+    @Pattern(regexp = "\\w+@\\w+\\.[a-z]{2,3}", message = "please use pattern hello@gmail.com")
     private String email;
 
     @Column(name = "balance", nullable = false)
