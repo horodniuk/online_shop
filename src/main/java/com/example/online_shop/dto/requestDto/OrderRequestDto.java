@@ -2,7 +2,6 @@ package com.example.online_shop.dto.requestDto;
 
 import lombok.Data;
 
-import java.net.Inet4Address;
 import java.time.LocalDateTime;
 import java.util.Map;
 

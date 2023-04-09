@@ -1,6 +1,7 @@
 package com.example.online_shop.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 @Entity
 @Table(name = "orders")
+@Data
 @NoArgsConstructor
 public class Order {
     @Id
@@ -47,19 +49,7 @@ public class Order {
     }
 
     public void addProducts(Map<Product, Integer> products) {
-        products.forEach((key, value) -> addProduct(key, value));
-    }
-
-    public Map<Product, Integer> getProducts() {
-        return products;
-    }
-
-    public void setUserCart(User userCart) {
-        this.userCart = userCart;
-    }
-
-    public User getUserCart() {
-        return userCart;
+        products.forEach(this::addProduct);
     }
 
     public double getTotalPrice() {

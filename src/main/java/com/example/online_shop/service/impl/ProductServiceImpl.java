@@ -1,12 +1,12 @@
 package com.example.online_shop.service.impl;
 
-import com.example.online_shop.dto.ProductDto;
 import com.example.online_shop.dto.requestDto.ProductRequestDto;
 import com.example.online_shop.dto.responseDto.ProductResponseDto;
 import com.example.online_shop.entity.Product;
 import com.example.online_shop.exception.ProductNotFoundException;
 import com.example.online_shop.repository.ProductRepository;
 import com.example.online_shop.service.ProductService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
                 () -> new ProductNotFoundException("Product with id " + productId + " not found!"));
     }
 
-
+    @Transactional
     @Override
     public ProductResponseDto delete(Long productId) {
         Product product = getProduct(productId);
@@ -56,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public ProductResponseDto editProduct(ProductRequestDto productRequestDto, Long productId) {
         Product product = getProduct(productId);

@@ -5,16 +5,17 @@ import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Order;
 import com.example.online_shop.entity.Product;
 import com.example.online_shop.entity.User;
-import com.example.online_shop.exception.NoSuchUserException;
+import com.example.online_shop.exception.OrderNotFoundException;
 import com.example.online_shop.repository.UserRepository;
+import com.example.online_shop.service.OrderService;
 import com.example.online_shop.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final ProductServiceImpl productService;
+    private final OrderService orderService;
 
     @Override
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
@@ -52,11 +54,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) throw new NoSuchUserException("There is no user with id: " + userId + " in DB.");
-        return optionalUser.get();
+        return userRepository.findById(userId).orElseThrow(
+                () -> new OrderNotFoundException("Order with id " + userId + " not found!"));
     }
 
+    @Transactional
     @Override
     public UserResponseDto deleteUser(Long userId) {
         User user = getUser(userId);
@@ -64,6 +66,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserResponseDto.class);
     }
 
+    @Transactional
     @Override
     public UserResponseDto editUser(Long userId, UserRequestDto userRequestDto) {
         User user = getUser(userId);
@@ -82,10 +85,10 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("The cart is empty, first you need to add products in it");
         }
         addNewOrder(user, cart);
-        return modelMapper.map(user,UserResponseDto.class);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
-    private static void addNewOrder(User user, Order cart) {
+    private void addNewOrder(User user, Order cart) {
         List<Order> orders = user.getOrders();
         double totalPrice = cart.getTotalPrice();
         double balance = user.getBalance();
@@ -96,9 +99,21 @@ public class UserServiceImpl implements UserService {
             orders.add(tempOrder);
             cart.getProducts().clear();
             user.setBalance(balance - totalPrice);
+            orderService.saveOrder(tempOrder);
         } else throw new IllegalArgumentException("Not enough money. Top up balance");
     }
 
+    @Transactional
+    @Override
+    public UserResponseDto removeOrderFromUser(Long userId, Long orderId) {
+        User user = getUser(userId);
+        Order order = orderService.getOrder(orderId);
+        user.getOrders().remove(order);
+        orderService.deleteOrder(orderId);
+        return modelMapper.map(user, UserResponseDto.class);
+    }
+
+    @Transactional
     @Override
     public UserResponseDto addProductToCart(Long productId, int quantity, Long userId) {
         User user = getUser(userId);
@@ -107,6 +122,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserResponseDto.class);
     }
 
+    @Transactional
     @Override
     public UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId) {
         User user = getUser(userId);
