@@ -42,7 +42,7 @@ public class User {
     private Double balance;
 
     @OneToMany(mappedBy = "user")
-    private List<Order> orders;
+    private List<Order> orders = new ArrayList<>();;
 
     @OneToOne(mappedBy = "userCart")
     private Order cart;
@@ -59,7 +59,6 @@ public class User {
     }
 
     public User() {
-        this.orders = new ArrayList<>();
         this.cart = new Order();
         this.cart.setUserCart(this);
         this.orders.add(this.cart);

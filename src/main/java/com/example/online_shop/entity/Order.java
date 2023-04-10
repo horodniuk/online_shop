@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +55,7 @@ public class Order {
 
     public double getTotalPrice() {
         return products.entrySet().stream()
-                                  .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue()).sum();
+                                  .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue()
+                                  ).sum();
     }
 }

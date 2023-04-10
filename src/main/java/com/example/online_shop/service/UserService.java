@@ -1,7 +1,5 @@
 package com.example.online_shop.service;
 
-import com.example.online_shop.dto.requestDto.OrderRequestDto;
-import com.example.online_shop.dto.requestDto.ProductRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.User;
