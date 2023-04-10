@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto addProductToCart(Long productId, int quantity, Long userId) {
         User user = getUser(userId);
-        Product product = productService.getProduct(productId);
+        Product product = productService.getById(productId);
         user.getCart().addProduct(product, quantity);
         return modelMapper.map(user, UserResponseDto.class);
     }
@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId) {
         User user = getUser(userId);
         Order cart = user.getCart();
-        Product product = productService.getProduct(productId);
+        Product product = productService.getById(productId);
         int quantityInCart = user.getCart().getProducts().get(product);
         if (isProductInCart(cart, product)) {
             removeProduct(quantity, cart, product, quantityInCart);

@@ -1,8 +1,10 @@
 package com.example.online_shop.controller;
 
 
-import com.example.online_shop.dto.responseDto.ProductResponseDto;
+import com.example.online_shop.dto.requestDto.ProductRequestDto;
+import com.example.online_shop.entity.Product;
 import com.example.online_shop.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,20 +14,27 @@ import java.util.List;
 @RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductController {
-
     private final ProductService productService;
 
     @GetMapping
-    public List<ProductResponseDto> getAll() {
+    public List<Product> getAll() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
-    public ProductResponseDto getById(@PathVariable("id") Long id){
+    public Product getById(@PathVariable("id") Long id) {
         return productService.getById(id);
     }
 
+    @PostMapping
+    public Product addProduct(@Valid ProductRequestDto productRequestDto) {
+        return productService.create(productRequestDto);
+    }
 
+    @PutMapping
+    public Product editProduct(@Valid ProductRequestDto productRequestDto, Long productId) {
+        return productService.editProduct(productRequestDto, productId);
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package com.example.online_shop.dto.responseDto;
 
+import com.example.online_shop.entity.Product;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -10,5 +11,5 @@ public class OrderResponseDto {
     private Long orderId;
     private LocalDateTime orderDate;
     private Long userId;
-    private Map<Long, Integer> products;
+    private Map<Product, Integer> products;
 }

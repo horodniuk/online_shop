@@ -30,6 +30,12 @@ public class User {
     @Column(name = "email", nullable = false)
     @Pattern(regexp = "\\w+@\\w+\\.[a-z]{2,3}", message = "please use pattern hello@gmail.com")
     private String email;
+    @Column(name = "password", nullable = false)
+    @NotBlank(message = "Password is required field")
+    private String password;
+    @Column(name = "role", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 
     @Column(name = "balance", nullable = false)
     @Min(value = 0, message = "Balance must be bigger than -1.")
