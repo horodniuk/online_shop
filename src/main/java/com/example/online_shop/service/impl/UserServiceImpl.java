@@ -93,13 +93,10 @@ public class UserServiceImpl implements UserService {
         double totalPrice = cart.getTotalPrice();
         double balance = user.getBalance();
         if (balance >= totalPrice) {
-            Order tempOrder = new Order(user);
-            tempOrder.addProducts(cart.getProducts());
-            tempOrder.setUserCart(cart.getUserCart());
-            orders.add(tempOrder);
-            cart.getProducts().clear();
+            orders.add(cart);
             user.setBalance(balance - totalPrice);
-            orderService.saveOrder(tempOrder);
+            orderService.saveOrder(cart);
+            cart = new Order(user);
         } else throw new IllegalArgumentException("Not enough money. Top up balance");
     }
 
@@ -139,11 +136,19 @@ public class UserServiceImpl implements UserService {
         return cart.getProducts().containsKey(product);
     }
 
-    private static void removeProduct(int quantity, Order cart, Product product, int quantityInCart) {
+    private void removeProduct(int quantity, Order cart, Product product, int quantityInCart) {
         if (quantityInCart < quantity)
             throw new IllegalArgumentException("Not enough quantity of " + product.getName() + " in cart. " +
                                                "Cart has: " + quantityInCart + " and you want to remove: " + quantity);
         else if (quantityInCart == quantity) cart.getProducts().remove(product);
         else cart.getProducts().put(product, quantityInCart - quantity);
     }
+
+    @Override
+    public UserResponseDto clearCart(Long userId) {
+        User user = getUser(userId);
+        user.getCart().getProducts().clear();
+        return modelMapper.map(user, UserResponseDto.class);
+    }
+
 }

@@ -26,4 +26,6 @@ public interface UserService {
     UserResponseDto addProductToCart(Long productId, int quantity, Long userId);
 
     UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId);
+
+    public UserResponseDto clearCart(Long userId);
 }

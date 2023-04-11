@@ -36,7 +36,8 @@ CREATE TABLE order_product(
 
 insert into users (first_name, last_name, email, balance, password, role)
 values ('Ivan', 'Ivanov', 'ivanov@gmail.com', 200.00, '1234','ROLE_USER') ,
-       ('Oleg', 'Olegov', 'olegov@gmail.com', 100.00, '4321','ROLE_ADMIN' );
+       ('Oleg', 'Olegov', 'olegov@gmail.com', 100.00, '4321','ROLE_ADMIN'),
+       ('Sergey', 'Petrov', 'petrov@gmail.com', 100.00, '9876','ROLE_SUPER_ADMIN');
 
 insert into products (name, price)
 VALUES ('beer', 50.00),
