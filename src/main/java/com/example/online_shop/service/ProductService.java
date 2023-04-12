@@ -1,12 +1,11 @@
 package com.example.online_shop.service;
 
-import com.example.online_shop.dto.requestDto.ProductRequestDto;
 import com.example.online_shop.entity.Product;
 
 import java.util.List;
 
 public interface ProductService {
-    Product create(ProductRequestDto productRequestDto);
+    Product create(Product product);
 
     Product getById(Long productId);
 
@@ -14,5 +13,5 @@ public interface ProductService {
 
     List<Product> getAllProducts();
 
-    Product editProduct(ProductRequestDto productRequestDto, Long productId);
+    Product editProduct(Product product);
 }

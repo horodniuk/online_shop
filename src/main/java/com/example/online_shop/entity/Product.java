@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 
 
 @Entity
 @Data
 @Table(name = "products")
+@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -16,7 +16,7 @@ public interface OrderService {
 
     List<OrderResponseDto> findAll();
 
-    OrderResponseDto editOrder(Long orderId, OrderRequestDto orderRequestDto);
+    OrderResponseDto editOrder(OrderRequestDto orderRequestDto);
 
     OrderResponseDto deleteOrder(Long orderId);
 }

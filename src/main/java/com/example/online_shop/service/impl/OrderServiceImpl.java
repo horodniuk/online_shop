@@ -47,8 +47,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderResponseDto editOrder(Long orderId, OrderRequestDto orderRequestDto) {
-        Order order = getOrder(orderId);
+    public OrderResponseDto editOrder(OrderRequestDto orderRequestDto) {
+        Order order = getOrder(orderRequestDto.getOrderId());
         order.setOrderDate(orderRequestDto.getOrderDate());
         return modelMapper.map(order, OrderResponseDto.class);
     }

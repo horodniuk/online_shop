@@ -68,8 +68,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto editUser(Long userId, UserRequestDto userRequestDto) {
-        User user = getUser(userId);
+    public UserResponseDto editUser(UserRequestDto userRequestDto) {
+        User user = getUser(userRequestDto.getUserId());
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
         user.setEmail(userRequestDto.getEmail());

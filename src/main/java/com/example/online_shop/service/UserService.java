@@ -17,7 +17,7 @@ public interface UserService {
 
     UserResponseDto deleteUser(Long userId);
 
-    UserResponseDto editUser(Long userId, UserRequestDto userRequestDto);
+    UserResponseDto editUser(UserRequestDto userRequestDto);
 
     UserResponseDto addOrderFromCart(Long userId);
 
