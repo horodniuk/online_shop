@@ -1,6 +1,7 @@
 package com.example.online_shop.service.impl;
 
 import com.example.online_shop.dto.requestDto.UserRequestDto;
+import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Order;
 import com.example.online_shop.entity.Product;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -150,5 +152,29 @@ public class UserServiceImpl implements UserService {
         user.getCart().getProducts().clear();
         return modelMapper.map(user, UserResponseDto.class);
     }
+
+    @Override
+    public Map<Product, Integer> showAllProductsInCart(Long userId) {
+        User user = getUser(userId);
+        return user.getCart().getProducts();
+    }
+
+    @Override
+    public List<OrderResponseDto> getAllUserOrders(Long userId) {
+        User user = getUser(userId);
+        return user.getOrders().stream()
+                .map(order -> modelMapper.map(order, OrderResponseDto.class)).toList();
+    }
+
+    @Override
+    public String addBalance(UserRequestDto userRequestDto) {
+        Long userId = userRequestDto.getUserId();
+        User user = getUser(userId);
+        user.setBalance(userRequestDto.getBalance());
+        Double balance = user.getBalance();
+
+        return "New balance of user " + userId + " is: " + balance;
+    }
+
 
 }

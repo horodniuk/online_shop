@@ -1,10 +1,13 @@
 package com.example.online_shop.service;
 
 import com.example.online_shop.dto.requestDto.UserRequestDto;
+import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
+import com.example.online_shop.entity.Product;
 import com.example.online_shop.entity.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
     UserResponseDto addUser(UserRequestDto userRequestDto);
@@ -27,5 +30,12 @@ public interface UserService {
 
     UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId);
 
-    public UserResponseDto clearCart(Long userId);
+    UserResponseDto clearCart(Long userId);
+
+    Map<Product, Integer> showAllProductsInCart(Long userId);
+
+    List<OrderResponseDto> getAllUserOrders(Long userId);
+
+    String addBalance(UserRequestDto userRequestDto);
+
 }
