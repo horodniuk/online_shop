@@ -12,5 +12,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/superadmin/admin")
 @RequiredArgsConstructor
 public class SuperAdminController {
+    private final UserService userService;
 
+    @PostMapping
+    public UserResponseDto addAdmin(UserRequestDto userRequestDto) {
+        return userService.addUser(userRequestDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public UserResponseDto deleteAdmin(@PathVariable("id") Long userId) {
+        return userService.deleteUser(userId);
+    }
+
+    @PutMapping
+    public UserResponseDto editAdmin(@RequestBody UserRequestDto userRequestDto) {
+        return userService.editUser(userRequestDto);
+    }
 }
