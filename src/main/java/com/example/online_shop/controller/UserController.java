@@ -27,7 +27,6 @@ public class UserController {
     @DeleteMapping("/cart/{id}")
     public UserResponseDto deleteProduct(@PathVariable) {
 
-
     }
 
     @GetMapping("/cart/{id}")
@@ -61,11 +60,6 @@ public class UserController {
     @PostMapping("/register")
     public UserResponseDto registerUser(@RequestBody UserRequestDto userRequestDto) {
         return userService.addUser(userRequestDto);
-    }
-
-    @PostMapping("/login")
-    public UserResponseDto loginUser() {
-
     }
 
     @PutMapping("/profile")

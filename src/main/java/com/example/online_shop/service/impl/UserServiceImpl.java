@@ -175,6 +175,4 @@ public class UserServiceImpl implements UserService {
 
         return "New balance of user " + userId + " is: " + balance;
     }
-
-
 }
