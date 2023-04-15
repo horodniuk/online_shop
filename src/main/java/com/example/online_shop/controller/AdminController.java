@@ -20,6 +20,7 @@ public class AdminController {
         return userService.deleteUser(userId);
     }
 
+    //method needs to be reviewed
     @PutMapping("/user")
     public UserResponseDto blockUser(@RequestBody UserRequestDto userRequestDto) {
         return userService.editUser(userRequestDto);

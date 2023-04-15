@@ -12,6 +12,8 @@ import java.util.Map;
 public interface UserService {
     UserResponseDto addUser(UserRequestDto userRequestDto);
 
+    UserResponseDto addAdmin(UserRequestDto userRequestDto);
+
     List<UserResponseDto> getAllUsers();
 
     UserResponseDto getUserById(Long userId);
@@ -21,6 +23,8 @@ public interface UserService {
     UserResponseDto deleteUser(Long userId);
 
     UserResponseDto editUser(UserRequestDto userRequestDto);
+
+    UserResponseDto changeUserToAdmin(UserRequestDto userRequestDto);
 
     UserResponseDto addOrderFromCart(Long userId);
 

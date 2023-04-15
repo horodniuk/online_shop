@@ -14,7 +14,7 @@ public class SuperAdminController {
 
     @PostMapping
     public UserResponseDto addAdmin(UserRequestDto userRequestDto) {
-        return userService.addUser(userRequestDto);
+        return userService.addAdmin(userRequestDto);
     }
 
     @DeleteMapping("/{id}")
@@ -23,7 +23,7 @@ public class SuperAdminController {
     }
 
     @PutMapping
-    public UserResponseDto editAdmin(@RequestBody UserRequestDto userRequestDto) {
-        return userService.editUser(userRequestDto);
+    public UserResponseDto assignAdmin(@RequestBody UserRequestDto userRequestDto) {
+        return userService.changeUserToAdmin(userRequestDto);
     }
 }

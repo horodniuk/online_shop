@@ -5,6 +5,7 @@ import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Order;
 import com.example.online_shop.entity.Product;
+import com.example.online_shop.entity.Role;
 import com.example.online_shop.entity.User;
 import com.example.online_shop.exception.OrderNotFoundException;
 import com.example.online_shop.repository.UserRepository;
@@ -15,10 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.example.online_shop.entity.Role.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,13 +32,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
+        return setUserDetails(userRequestDto, ROLE_USER);
+    }
+
+    @Override
+    public UserResponseDto addAdmin(UserRequestDto userRequestDto) {
+        return setUserDetails(userRequestDto, ROLE_ADMIN);
+    }
+
+    private UserResponseDto setUserDetails(UserRequestDto userRequestDto, Role roleAdmin) {
         User user = new User();
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
         user.setEmail(userRequestDto.getEmail());
+        user.setPassword(userRequestDto.getPassword());
+        user.setRole(roleAdmin);
         user.setBalance(0D);
-        user.setCart(new Order(user));
-        user.setOrders(new ArrayList<>());
         userRepository.save(user);
         return modelMapper.map(user, UserResponseDto.class);
     }
@@ -75,7 +86,13 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
         user.setEmail(userRequestDto.getEmail());
-        user.setBalance(userRequestDto.getBalance());
+        return modelMapper.map(user, UserResponseDto.class);
+    }
+
+    @Override
+    public UserResponseDto changeUserToAdmin(UserRequestDto userRequestDto) {
+        User user = getUser(userRequestDto.getUserId());
+        user.setRole(ROLE_ADMIN);
         return modelMapper.map(user, UserResponseDto.class);
     }
 

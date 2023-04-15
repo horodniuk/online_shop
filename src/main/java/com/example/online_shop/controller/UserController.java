@@ -19,14 +19,16 @@ public class UserController {
     private final UserService userService;
     private final OrderService orderService;
 
+    // method needs to be implemented
     @PostMapping("/cart")
     public UserResponseDto addProductToCart(@RequestBody Product product) {
-
+        return null;
     }
 
+    // method needs to be implemented
     @DeleteMapping("/cart/{id}")
-    public UserResponseDto deleteProduct(@PathVariable) {
-
+    public UserResponseDto deleteProduct(@PathVariable("id") Long userId, @RequestParam Long productId) {
+        return null;
     }
 
     @GetMapping("/cart/{id}")

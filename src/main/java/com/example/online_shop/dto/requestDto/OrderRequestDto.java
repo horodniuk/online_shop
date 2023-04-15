@@ -12,6 +12,4 @@ public class OrderRequestDto {
     private Long orderId;
     private LocalDateTime orderDate;
     private Long userId;
-    private Map<Long, Integer> products;
-
 }
