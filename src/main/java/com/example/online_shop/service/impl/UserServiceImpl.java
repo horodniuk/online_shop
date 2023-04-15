@@ -40,13 +40,13 @@ public class UserServiceImpl implements UserService {
         return setUserDetails(userRequestDto, ROLE_ADMIN);
     }
 
-    private UserResponseDto setUserDetails(UserRequestDto userRequestDto, Role roleAdmin) {
+    private UserResponseDto setUserDetails(UserRequestDto userRequestDto, Role role) {
         User user = new User();
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
         user.setEmail(userRequestDto.getEmail());
         user.setPassword(userRequestDto.getPassword());
-        user.setRole(roleAdmin);
+        user.setRole(role);
         user.setBalance(0D);
         userRepository.save(user);
         return modelMapper.map(user, UserResponseDto.class);

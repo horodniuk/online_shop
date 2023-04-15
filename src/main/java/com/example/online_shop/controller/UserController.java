@@ -48,13 +48,12 @@ public class UserController {
         return userService.clearCart(userId);
     }
 
-    @GetMapping("/orders")
-    public List<OrderResponseDto> getAllUserOrders(@RequestBody UserRequestDto userRequestDto) {
-        Long userId = userRequestDto.getUserId();
+    @GetMapping("/orders/{id}")
+    public List<OrderResponseDto> getAllUserOrders(@PathVariable("id") Long userId) {
         return userService.getAllUserOrders(userId);
     }
 
-    @GetMapping("/orders/{id}")
+    @GetMapping("/order/{id}")
     public OrderResponseDto getOrderById(@PathVariable("id") Long orderId) {
         return orderService.findById(orderId);
     }
@@ -74,4 +73,8 @@ public class UserController {
         return userService.addBalance(userRequestDto);
     }
 
+    @GetMapping("/{id}")
+    public UserResponseDto getUser(@PathVariable("id") Long userId) {
+        return userService.getUserById(userId);
+    }
 }

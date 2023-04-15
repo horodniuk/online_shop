@@ -44,7 +44,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
-
+    @Transient
     @OneToOne(mappedBy = "userCart")
     private Order cart;
 

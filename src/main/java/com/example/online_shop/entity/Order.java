@@ -25,6 +25,7 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
+    @Transient
     @OneToOne
     @JoinColumn(name = "cart_user_id")
     private User userCart;
