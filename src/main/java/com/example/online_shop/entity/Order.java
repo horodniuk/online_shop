@@ -17,19 +17,15 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private Long orderId;
-
     @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
-
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
-
     @Transient
     @OneToOne
     @JoinColumn(name = "cart_user_id")
     private User userCart;
-
     @ElementCollection
     @CollectionTable(name = "order_product", joinColumns = {
             @JoinColumn(name = "order_id",
@@ -55,7 +51,6 @@ public class Order {
 
     public double getTotalPrice() {
         return products.entrySet().stream()
-                                  .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue()
-                                  ).sum();
+                .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue()).sum();
     }
 }

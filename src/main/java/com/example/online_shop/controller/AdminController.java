@@ -1,5 +1,6 @@
 package com.example.online_shop.controller;
 
+import com.example.online_shop.dto.requestDto.ProductRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Product;
@@ -32,8 +33,8 @@ public class AdminController {
     }
 
     @PostMapping("/product")
-    public Product addProduct(@RequestBody Product product) {
-        return productService.create(product);
+    public Product addProduct(@RequestBody ProductRequestDto productRequestDto) {
+        return productService.create(productRequestDto);
     }
 
     @DeleteMapping("/product/{id}")

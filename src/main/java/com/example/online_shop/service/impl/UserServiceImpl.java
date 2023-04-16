@@ -1,6 +1,7 @@
 package com.example.online_shop.service.impl;
 
 import com.example.online_shop.dto.requestDto.UserRequestDto;
+import com.example.online_shop.dto.requestDto.UserRequestToChangeDto;
 import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Order;
@@ -90,7 +91,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto changeUserToAdmin(UserRequestDto userRequestDto) {
+    public UserResponseDto changeUserToAdmin(UserRequestToChangeDto userRequestDto) {
         User user = getUser(userRequestDto.getUserId());
         user.setRole(ROLE_ADMIN);
         return modelMapper.map(user, UserResponseDto.class);
@@ -115,7 +116,7 @@ public class UserServiceImpl implements UserService {
             orders.add(cart);
             user.setBalance(balance - totalPrice);
             orderService.saveOrder(cart);
-            cart = new Order(user);
+            user.setCart(new Order(user));
         } else throw new IllegalArgumentException("Not enough money. Top up balance");
     }
 
@@ -140,7 +141,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId) {
+    public OrderResponseDto removeProductFromCart(Long productId, int quantity, Long userId) {
         User user = getUser(userId);
         Order cart = user.getCart();
         Product product = productService.getById(productId);
@@ -148,7 +149,7 @@ public class UserServiceImpl implements UserService {
         if (isProductInCart(cart, product)) {
             removeProduct(quantity, cart, product, quantityInCart);
         } else throw new IllegalArgumentException("There is no product: " + product.getName() + " in cart.");
-        return modelMapper.map(user, UserResponseDto.class);
+        return modelMapper.map(cart, OrderResponseDto.class);
     }
 
     private boolean isProductInCart(Order cart, Product product) {
@@ -183,13 +184,19 @@ public class UserServiceImpl implements UserService {
                 .map(order -> modelMapper.map(order, OrderResponseDto.class)).toList();
     }
 
+    @Transactional
     @Override
     public String addBalance(UserRequestDto userRequestDto) {
         Long userId = userRequestDto.getUserId();
         User user = getUser(userId);
-        user.setBalance(userRequestDto.getBalance());
         Double balance = user.getBalance();
+        Double sumToAdd = userRequestDto.getBalance();
 
-        return "New balance of user " + userId + " is: " + balance;
+        if (sumToAdd > 0) {
+            user.setBalance(balance + sumToAdd);
+        } else throw new IllegalArgumentException("The sum to replenish the balance must be greater than null! " +
+                                               "Sum you entered is: " + sumToAdd);
+        Double newBalance = user.getBalance();
+        return "New balance of user " + userId + " is: " + newBalance;
     }
 }

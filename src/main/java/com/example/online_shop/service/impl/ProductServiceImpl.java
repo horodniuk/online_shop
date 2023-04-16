@@ -1,5 +1,6 @@
 package com.example.online_shop.service.impl;
 
+import com.example.online_shop.dto.requestDto.ProductRequestDto;
 import com.example.online_shop.entity.Product;
 import com.example.online_shop.exception.ProductNotFoundException;
 import com.example.online_shop.repository.ProductRepository;
@@ -17,7 +18,10 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public Product create(Product product) {
+    public Product create(ProductRequestDto productRequestDto) {
+        Product product = new Product();
+        product.setName(productRequestDto.getName());
+        product.setPrice(productRequestDto.getPrice());
         productRepository.save(product);
         return product;
     }
