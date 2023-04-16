@@ -72,9 +72,4 @@ public class UserController {
     public String addBalance(@RequestBody UserRequestDto userRequestDto) {
         return userService.addBalance(userRequestDto);
     }
-
-    @GetMapping("/{id}")
-    public UserResponseDto getUser(@PathVariable("id") Long userId) {
-        return userService.getUserById(userId);
-    }
 }
