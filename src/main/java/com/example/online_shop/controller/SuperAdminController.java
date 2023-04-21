@@ -1,6 +1,7 @@
 package com.example.online_shop.controller;
 
 import com.example.online_shop.dto.requestDto.UserRequestDto;
+import com.example.online_shop.dto.requestDto.UserRequestToChangeDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ public class SuperAdminController {
     private final UserService userService;
 
     @PostMapping
-    public UserResponseDto addAdmin(UserRequestDto userRequestDto) {
+    public UserResponseDto addAdmin(@RequestBody UserRequestDto userRequestDto) {
         return userService.addAdmin(userRequestDto);
     }
 
@@ -23,7 +24,7 @@ public class SuperAdminController {
     }
 
     @PutMapping
-    public UserResponseDto assignAdmin(@RequestBody UserRequestDto userRequestDto) {
+    public UserResponseDto assignAdmin(@RequestBody UserRequestToChangeDto userRequestDto) {
         return userService.changeUserToAdmin(userRequestDto);
     }
 }

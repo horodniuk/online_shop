@@ -14,6 +14,6 @@ public class UserResponseDto {
     private String email;
     private String role;
     private Double balance;
-    private List<Long> orders;
+    private List<OrderResponseDto> orders;
     private Long cartId;
 }
