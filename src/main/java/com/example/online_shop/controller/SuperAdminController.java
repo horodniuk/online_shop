@@ -15,7 +15,7 @@ public class SuperAdminController {
 
     @PostMapping
     public UserResponseDto addAdmin(@RequestBody UserRequestDto userRequestDto) {
-        return userService.addAdmin(userRequestDto);
+        return userService.createAdmin(userRequestDto);
     }
 
     @DeleteMapping("/{id}")

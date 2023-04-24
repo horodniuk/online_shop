@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserService {
-    UserResponseDto addUser(UserRequestDto userRequestDto);
+    UserResponseDto createUser(UserRequestDto userRequestDto);
 
-    UserResponseDto addAdmin(UserRequestDto userRequestDto);
+    UserResponseDto createAdmin(UserRequestDto userRequestDto);
 
     List<UserResponseDto> getAllUsers();
 

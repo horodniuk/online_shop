@@ -29,7 +29,7 @@ public class AdminController {
 
     @PostMapping("/user")
     public UserResponseDto addUser(@RequestBody UserRequestDto userRequestDto) {
-        return userService.addUser(userRequestDto);
+        return userService.createUser(userRequestDto);
     }
 
     @PostMapping("/product")

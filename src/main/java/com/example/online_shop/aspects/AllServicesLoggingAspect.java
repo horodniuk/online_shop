@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 
 public class AllServicesLoggingAspect {
 
-    protected static Object logMethodStartAndFinish(ProceedingJoinPoint joinPoint, Logger log) {
+    public static Object logMethodStartAndFinish(ProceedingJoinPoint joinPoint, Logger log) {
         String methodName = joinPoint.getSignature().getName();
         log.trace("Method {} is starting", methodName);
         Object targetMethodResult = null;

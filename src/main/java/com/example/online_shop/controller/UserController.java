@@ -60,7 +60,7 @@ public class UserController {
 
     @PostMapping("/register")
     public UserResponseDto registerUser(@RequestBody UserRequestDto userRequestDto) {
-        return userService.addUser(userRequestDto);
+        return userService.createUser(userRequestDto);
     }
 
     @PutMapping("/profile")

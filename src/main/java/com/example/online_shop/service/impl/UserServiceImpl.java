@@ -32,12 +32,12 @@ public class UserServiceImpl implements UserService {
     private final OrderService orderService;
 
     @Override
-    public UserResponseDto addUser(UserRequestDto userRequestDto) {
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
         return setUserDetails(userRequestDto, ROLE_USER);
     }
 
     @Override
-    public UserResponseDto addAdmin(UserRequestDto userRequestDto) {
+    public UserResponseDto createAdmin(UserRequestDto userRequestDto) {
         return setUserDetails(userRequestDto, ROLE_ADMIN);
     }
 
