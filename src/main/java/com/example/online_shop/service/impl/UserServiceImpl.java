@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto addOrderFromCart(Long userId) {
+    public UserResponseDto addOrderToUser(Long userId) {
         User user = getUser(userId);
         Order cart = user.getCart();
         if (cart.getProducts().isEmpty()) {

@@ -39,7 +39,7 @@ public class UserController {
     @PostMapping("/cart/submit")
     public UserResponseDto addCartToOrder(@RequestBody UserRequestDto userRequestDto) {
         Long userId = userRequestDto.getUserId();
-        return userService.addOrderFromCart(userId);
+        return userService.addOrderToUser(userId);
     }
 
     @DeleteMapping("/cart")

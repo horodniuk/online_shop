@@ -27,7 +27,7 @@ public interface UserService {
 
     UserResponseDto changeUserToAdmin(UserRequestToChangeDto userRequestDto);
 
-    UserResponseDto addOrderFromCart(Long userId);
+    UserResponseDto addOrderToUser(Long userId);
 
     UserResponseDto removeOrderFromUser(Long userId, Long orderId);
 
