@@ -44,7 +44,7 @@ public class AdminController {
     }
 
     @PutMapping("/product")
-    public Product editProduct(@RequestBody Product product) {
+    public Product editProduct(@RequestBody @Valid Product product) {
         return productService.editProduct(product);
     }
 }

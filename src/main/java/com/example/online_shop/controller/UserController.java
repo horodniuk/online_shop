@@ -65,12 +65,12 @@ public class UserController {
     }
 
     @PutMapping("/profile")
-    public UserResponseDto editProfile(@RequestBody UserRequestDto userRequestDto) {
+    public UserResponseDto editProfile(@RequestBody @Valid UserRequestDto userRequestDto) {
         return userService.editUser(userRequestDto);
     }
 
     @PutMapping("/balance")
-    public String addBalance(@RequestBody UserRequestDto userRequestDto) {
+    public String addBalance(@RequestBody @Valid UserRequestDto userRequestDto) {
         return userService.addBalance(userRequestDto);
     }
 }

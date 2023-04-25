@@ -25,7 +25,7 @@ public class SuperAdminController {
     }
 
     @PutMapping
-    public UserResponseDto assignAdmin(@RequestBody UserRequestToChangeDto userRequestDto) {
+    public UserResponseDto assignAdmin(@RequestBody @Valid UserRequestToChangeDto userRequestDto) {
         return userService.changeUserToAdmin(userRequestDto);
     }
 }
