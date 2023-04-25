@@ -33,7 +33,7 @@ public interface UserService {
 
     UserResponseDto addProductToCart(Long productId, int quantity, Long userId);
 
-    OrderResponseDto removeProductFromCart(Long productId, int quantity, Long userId);
+    UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId);
 
     UserResponseDto clearCart(Long userId);
 

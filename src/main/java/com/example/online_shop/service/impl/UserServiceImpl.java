@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public OrderResponseDto removeProductFromCart(Long productId, int quantity, Long userId) {
+    public UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId) {
         User user = getUser(userId);
         Order cart = user.getCart();
         Product product = productService.getById(productId);
@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
         if (isProductInCart(cart, product)) {
             removeProduct(quantity, cart, product, quantityInCart);
         } else throw new IllegalArgumentException("There is no product: " + product.getName() + " in cart.");
-        return modelMapper.map(cart, OrderResponseDto.class);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
     private boolean isProductInCart(Order cart, Product product) {
