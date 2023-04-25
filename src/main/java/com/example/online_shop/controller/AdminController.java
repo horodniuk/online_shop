@@ -6,6 +6,7 @@ import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Product;
 import com.example.online_shop.service.ProductService;
 import com.example.online_shop.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +29,12 @@ public class AdminController {
     }
 
     @PostMapping("/user")
-    public UserResponseDto addUser(@RequestBody UserRequestDto userRequestDto) {
+    public UserResponseDto addUser(@RequestBody @Valid UserRequestDto userRequestDto) {
         return userService.createUser(userRequestDto);
     }
 
     @PostMapping("/product")
-    public Product addProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public Product addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
         return productService.create(productRequestDto);
     }
 

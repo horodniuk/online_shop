@@ -6,6 +6,7 @@ import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Product;
 import com.example.online_shop.service.OrderService;
 import com.example.online_shop.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserResponseDto registerUser(@RequestBody UserRequestDto userRequestDto) {
+    public UserResponseDto registerUser(@RequestBody @Valid UserRequestDto userRequestDto) {
         return userService.createUser(userRequestDto);
     }
 
