@@ -3,26 +3,17 @@ package com.example.online_shop.aspects;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
-import static com.example.online_shop.aspects.AllServicesLoggingAspect.logMethodStartAndFinish;
-
 @Aspect
 @Slf4j
 @Component
 public class UserServiceAspect {
-
-    @Around("com.example.online_shop.aspects.PointCuts.allUserServiceMethods()")
-    public Object around(ProceedingJoinPoint joinPoint) {
-        return logMethodStartAndFinish(joinPoint, log);
-    }
 
     @AfterReturning(value = "execution(* com.example.online_shop.service.impl.UserServiceImpl.create*(*))",
             returning = "user")
@@ -106,7 +97,7 @@ public class UserServiceAspect {
         log.info(message);
     }
 
-    @AfterThrowing(value = "execution(* com.example.online_shop.aspects.PointCuts.allUserServiceMethods())",
+    @AfterThrowing(value = "execution(* com.example.online_shop.service.impl.UserServiceImpl.*(..))",
             throwing = "exception")
     public void afterThrowingInUserService(Throwable exception) {
         log.warn(exception.getMessage());
