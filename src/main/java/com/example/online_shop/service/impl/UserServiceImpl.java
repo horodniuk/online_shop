@@ -32,12 +32,12 @@ public class UserServiceImpl implements UserService {
     private final OrderService orderService;
 
     @Override
-    public UserResponseDto addUser(UserRequestDto userRequestDto) {
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
         return setUserDetails(userRequestDto, ROLE_USER);
     }
 
     @Override
-    public UserResponseDto addAdmin(UserRequestDto userRequestDto) {
+    public UserResponseDto createAdmin(UserRequestDto userRequestDto) {
         return setUserDetails(userRequestDto, ROLE_ADMIN);
     }
 
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto addOrderFromCart(Long userId) {
+    public UserResponseDto addOrderToUser(Long userId) {
         User user = getUser(userId);
         Order cart = user.getCart();
         if (cart.getProducts().isEmpty()) {
@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public OrderResponseDto removeProductFromCart(Long productId, int quantity, Long userId) {
+    public UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId) {
         User user = getUser(userId);
         Order cart = user.getCart();
         Product product = productService.getById(productId);
@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
         if (isProductInCart(cart, product)) {
             removeProduct(quantity, cart, product, quantityInCart);
         } else throw new IllegalArgumentException("There is no product: " + product.getName() + " in cart.");
-        return modelMapper.map(cart, OrderResponseDto.class);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
     private boolean isProductInCart(Order cart, Product product) {

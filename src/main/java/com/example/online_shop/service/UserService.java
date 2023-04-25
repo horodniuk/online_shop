@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserService {
-    UserResponseDto addUser(UserRequestDto userRequestDto);
+    UserResponseDto createUser(UserRequestDto userRequestDto);
 
-    UserResponseDto addAdmin(UserRequestDto userRequestDto);
+    UserResponseDto createAdmin(UserRequestDto userRequestDto);
 
     List<UserResponseDto> getAllUsers();
 
@@ -27,13 +27,13 @@ public interface UserService {
 
     UserResponseDto changeUserToAdmin(UserRequestToChangeDto userRequestDto);
 
-    UserResponseDto addOrderFromCart(Long userId);
+    UserResponseDto addOrderToUser(Long userId);
 
     UserResponseDto removeOrderFromUser(Long userId, Long orderId);
 
     UserResponseDto addProductToCart(Long productId, int quantity, Long userId);
 
-    OrderResponseDto removeProductFromCart(Long productId, int quantity, Long userId);
+    UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId);
 
     UserResponseDto clearCart(Long userId);
 

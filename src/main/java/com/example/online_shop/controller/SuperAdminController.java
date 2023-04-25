@@ -4,6 +4,7 @@ import com.example.online_shop.dto.requestDto.UserRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestToChangeDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +15,8 @@ public class SuperAdminController {
     private final UserService userService;
 
     @PostMapping
-    public UserResponseDto addAdmin(@RequestBody UserRequestDto userRequestDto) {
-        return userService.addAdmin(userRequestDto);
+    public UserResponseDto addAdmin(@RequestBody @Valid UserRequestDto userRequestDto) {
+        return userService.createAdmin(userRequestDto);
     }
 
     @DeleteMapping("/{id}")
@@ -24,7 +25,7 @@ public class SuperAdminController {
     }
 
     @PutMapping
-    public UserResponseDto assignAdmin(@RequestBody UserRequestToChangeDto userRequestDto) {
+    public UserResponseDto assignAdmin(@RequestBody @Valid UserRequestToChangeDto userRequestDto) {
         return userService.changeUserToAdmin(userRequestDto);
     }
 }
