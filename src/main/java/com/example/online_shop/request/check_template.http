@@ -1,0 +1,103 @@
+### superadmin - addAdmin
+POST http://localhost:8080/api/superadmin/admin
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "admin",
+  "lastName": "admin",
+  "email": "admin@gmail.com",
+  "password":"123",
+  "balance": 100.00
+}
+
+### superadmin - deleteAdmin
+DELETE http://localhost:8080/api/superadmin/admin/4
+
+### superadmin - assignAdmin
+PUT http://localhost:8080/api/superadmin/admin/1
+
+
+### admin - addUser
+POST http://localhost:8080/api/admin/user
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "user",
+  "lastName": "user",
+  "email": "user@gmail.com",
+  "password":"123",
+  "balance": 100.00
+}
+
+### admin - deleteUser
+DELETE http://localhost:8080/api/admin/user/6
+
+
+### admin - addProduct
+POST http://localhost:8080/api/admin/product
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "tea",
+  "price": 5.00
+}
+
+### admin - deleteProduct
+DELETE http://localhost:8080/api/admin/product/4
+
+### admin - editProduct
+PUT http://localhost:8080/api/admin/product
+Content-Type: application/json
+Accept: application/json
+
+{
+  "productId": "4",
+  "name": "cheese",
+  "price": 70.0
+}
+
+### admin - blockUser
+PUT http://localhost:8080/api/admin/user
+//impl
+
+
+
+### user - addProductToCart
+POST http://localhost:8080/api/user/cart
+Content-Type: application/json
+Accept: application/json
+
+{
+  "userId": 1,
+  "productId": 2,
+  "quantity": 10
+}
+
+### user - removeProductFromCart
+PUT http://localhost:8080/api/user/cart
+Content-Type: application/json
+Accept: application/json
+
+{
+  "userId": 1,
+  "productId": 2,
+  "quantity": 3
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

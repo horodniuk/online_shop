@@ -1,5 +1,6 @@
 package com.example.online_shop.controller;
 
+import com.example.online_shop.dto.requestDto.CartRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
 import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
@@ -20,16 +21,20 @@ public class UserController {
     private final UserService userService;
     private final OrderService orderService;
 
-    // method needs to be implemented
     @PostMapping("/cart")
-    public UserResponseDto addProductToCart(@RequestBody Product product) {
-        return null;
+    public UserResponseDto addProductToCart(@RequestBody CartRequestDto cartDto) {
+        return userService.addProductToCart(cartDto);
     }
 
-    // method needs to be implemented
-    @DeleteMapping("/cart/{id}")
-    public UserResponseDto deleteProduct(@PathVariable("id") Long userId, @RequestParam Long productId) {
-        return null;
+    @PutMapping("/cart")
+    public UserResponseDto removeProductFromCart(@RequestBody CartRequestDto cartDto) {
+        return userService.removeProductFromCart(cartDto);
+    }
+
+    @DeleteMapping("/cart")
+    public UserResponseDto clearCart(@RequestBody UserRequestDto userRequestDto) {
+        Long userId = userRequestDto.getUserId();
+        return userService.clearCart(userId);
     }
 
     @GetMapping("/cart/{id}")
@@ -43,11 +48,7 @@ public class UserController {
         return userService.addOrderToUser(userId);
     }
 
-    @DeleteMapping("/cart")
-    public UserResponseDto clearCart(@RequestBody UserRequestDto userRequestDto) {
-        Long userId = userRequestDto.getUserId();
-        return userService.clearCart(userId);
-    }
+
 
     @GetMapping("/orders/{id}")
     public List<OrderResponseDto> getAllUserOrders(@PathVariable("id") Long userId) {

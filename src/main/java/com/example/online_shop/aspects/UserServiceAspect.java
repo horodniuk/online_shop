@@ -15,7 +15,7 @@ import java.util.Arrays;
 @Component
 public class UserServiceAspect {
 
-    @AfterReturning(value = "execution(* com.example.online_shop.service.impl.UserServiceImpl.create*(*))",
+    /*@AfterReturning(value = "execution(* com.example.online_shop.service.impl.UserServiceImpl.create*(*))",
             returning = "user")
     public void afterReturningWhenCreated(UserResponseDto user) {
         String message = "User with id = {}, firstName - {}, lastName - {}, email - {} and role - {} was created.";
@@ -101,5 +101,5 @@ public class UserServiceAspect {
             throwing = "exception")
     public void afterThrowingInUserService(Throwable exception) {
         log.warn(exception.getMessage());
-    }
+    }*/
 }

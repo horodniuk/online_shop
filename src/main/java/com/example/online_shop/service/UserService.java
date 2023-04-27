@@ -1,5 +1,6 @@
 package com.example.online_shop.service;
 
+import com.example.online_shop.dto.requestDto.CartRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestToChangeDto;
 import com.example.online_shop.dto.responseDto.OrderResponseDto;
@@ -25,15 +26,15 @@ public interface UserService {
 
     UserResponseDto editUser(UserRequestDto userRequestDto);
 
-    UserResponseDto changeUserToAdmin(UserRequestToChangeDto userRequestDto);
+    UserResponseDto changeUserToAdmin(Long userId);
 
     UserResponseDto addOrderToUser(Long userId);
 
     UserResponseDto removeOrderFromUser(Long userId, Long orderId);
 
-    UserResponseDto addProductToCart(Long productId, int quantity, Long userId);
+    UserResponseDto addProductToCart(CartRequestDto cartRequestDto);
 
-    UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId);
+    UserResponseDto removeProductFromCart(CartRequestDto cartRequestDto);
 
     UserResponseDto clearCart(Long userId);
 

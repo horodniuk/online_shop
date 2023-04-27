@@ -22,12 +22,6 @@ public class AdminController {
         return userService.deleteUser(userId);
     }
 
-    //method needs to be reviewed
-    @PutMapping("/user")
-    public UserResponseDto blockUser(@RequestBody UserRequestDto userRequestDto) {
-        return userService.editUser(userRequestDto);
-    }
-
     @PostMapping("/user")
     public UserResponseDto addUser(@RequestBody @Valid UserRequestDto userRequestDto) {
         return userService.createUser(userRequestDto);
@@ -47,4 +41,11 @@ public class AdminController {
     public Product editProduct(@RequestBody @Valid Product product) {
         return productService.editProduct(product);
     }
+
+    //method needs to be reviewed
+    @PutMapping("/user")
+    public UserResponseDto blockUser(@RequestBody UserRequestDto userRequestDto) {
+        return userService.editUser(userRequestDto);
+    }
+
 }

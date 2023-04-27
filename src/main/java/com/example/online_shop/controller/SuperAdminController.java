@@ -24,8 +24,8 @@ public class SuperAdminController {
         return userService.deleteUser(userId);
     }
 
-    @PutMapping
-    public UserResponseDto assignAdmin(@RequestBody @Valid UserRequestToChangeDto userRequestDto) {
-        return userService.changeUserToAdmin(userRequestDto);
+    @PutMapping("/{id}")
+    public UserResponseDto assignAdmin(@PathVariable("id") Long userId) {
+        return userService.changeUserToAdmin(userId);
     }
 }

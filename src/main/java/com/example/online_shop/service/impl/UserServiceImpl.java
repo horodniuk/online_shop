@@ -1,7 +1,7 @@
 package com.example.online_shop.service.impl;
 
+import com.example.online_shop.dto.requestDto.CartRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
-import com.example.online_shop.dto.requestDto.UserRequestToChangeDto;
 import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Order;
@@ -17,11 +17,14 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.example.online_shop.entity.Role.*;
+import static com.example.online_shop.entity.Role.ADMIN;
+import static com.example.online_shop.entity.Role.USER;
 
 @Service
 @RequiredArgsConstructor
@@ -31,14 +34,61 @@ public class UserServiceImpl implements UserService {
     private final ProductServiceImpl productService;
     private final OrderService orderService;
 
+
+    @Transactional
+    @Override
+    public UserResponseDto addProductToCart(CartRequestDto cartDto) {
+        User user = getUser(cartDto.getUserId());
+        Product product = productService.getById(cartDto.getProductId());
+        user.addProductToCart(product, cartDto.getQuantity());
+        return modelMapper.map(user, UserResponseDto.class);
+    }
+
+    @Transactional
+    @Override
+    public UserResponseDto removeProductFromCart(CartRequestDto cartDto) {
+        User user = getUser(cartDto.getUserId());
+        Product product = productService.getById(cartDto.getProductId());
+        user.removeProductFromCart(product, cartDto.getQuantity());
+        System.out.println(user.getCart());
+        return modelMapper.map(user, UserResponseDto.class);
+    }
+
+    @Override
+    public UserResponseDto addOrderToUser(Long userId) {
+        User user = getUser(userId);
+        Map<Product, Integer> cart = user.getCart();
+        if (cart.isEmpty()) {
+            throw new IllegalArgumentException("The cart is empty, first you need to add products in it");
+        }
+        addNewOrder(user, cart);
+        return modelMapper.map(user, UserResponseDto.class);
+    }
+
+    private void addNewOrder(User user, Map<Product, Integer> cart) {
+        List<Order> orders = user.getOrders();
+        double totalPrice = cart.entrySet().stream()
+                .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
+                .sum();
+        double balance = user.getBalance();
+        if (balance >= totalPrice) {
+            Order newOrder = new Order(user);
+            orders.add(newOrder);
+            user.setBalance(balance - totalPrice);
+            orderService.saveOrder(newOrder);
+            user.setCart(new HashMap<>());
+        } else throw new IllegalArgumentException("Not enough money. Top up balance");
+    }
+
+
     @Override
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
-        return setUserDetails(userRequestDto, ROLE_USER);
+        return setUserDetails(userRequestDto, USER);
     }
 
     @Override
     public UserResponseDto createAdmin(UserRequestDto userRequestDto) {
-        return setUserDetails(userRequestDto, ROLE_ADMIN);
+        return setUserDetails(userRequestDto, ADMIN);
     }
 
     private UserResponseDto setUserDetails(UserRequestDto userRequestDto, Role role) {
@@ -90,35 +140,15 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserResponseDto.class);
     }
 
+    @Transactional
     @Override
-    public UserResponseDto changeUserToAdmin(UserRequestToChangeDto userRequestDto) {
-        User user = getUser(userRequestDto.getUserId());
-        user.setRole(ROLE_ADMIN);
-        return modelMapper.map(user, UserResponseDto.class);
-    }
-
-    @Override
-    public UserResponseDto addOrderToUser(Long userId) {
+    public UserResponseDto changeUserToAdmin(Long userId) {
         User user = getUser(userId);
-        Order cart = user.getCart();
-        if (cart.getProducts().isEmpty()) {
-            throw new IllegalArgumentException("The cart is empty, first you need to add products in it");
-        }
-        addNewOrder(user, cart);
+        user.setRole(ADMIN);
         return modelMapper.map(user, UserResponseDto.class);
     }
 
-    private void addNewOrder(User user, Order cart) {
-        List<Order> orders = user.getOrders();
-        double totalPrice = cart.getTotalPrice();
-        double balance = user.getBalance();
-        if (balance >= totalPrice) {
-            orders.add(cart);
-            user.setBalance(balance - totalPrice);
-            orderService.saveOrder(cart);
-            user.setCart(new Order(user));
-        } else throw new IllegalArgumentException("Not enough money. Top up balance");
-    }
+
 
     @Transactional
     @Override
@@ -130,27 +160,9 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserResponseDto.class);
     }
 
-    @Transactional
-    @Override
-    public UserResponseDto addProductToCart(Long productId, int quantity, Long userId) {
-        User user = getUser(userId);
-        Product product = productService.getById(productId);
-        user.getCart().addProduct(product, quantity);
-        return modelMapper.map(user, UserResponseDto.class);
-    }
 
-    @Transactional
-    @Override
-    public UserResponseDto removeProductFromCart(Long productId, int quantity, Long userId) {
-        User user = getUser(userId);
-        Order cart = user.getCart();
-        Product product = productService.getById(productId);
-        int quantityInCart = user.getCart().getProducts().get(product);
-        if (isProductInCart(cart, product)) {
-            removeProduct(quantity, cart, product, quantityInCart);
-        } else throw new IllegalArgumentException("There is no product: " + product.getName() + " in cart.");
-        return modelMapper.map(user, UserResponseDto.class);
-    }
+
+
 
     private boolean isProductInCart(Order cart, Product product) {
         return cart.getProducts().containsKey(product);
@@ -167,14 +179,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto clearCart(Long userId) {
         User user = getUser(userId);
-        user.getCart().getProducts().clear();
+        user.getCart().clear();
         return modelMapper.map(user, UserResponseDto.class);
     }
 
     @Override
     public Map<Product, Integer> showAllProductsInCart(Long userId) {
         User user = getUser(userId);
-        return user.getCart().getProducts();
+        return user.getCart();
     }
 
     @Override
