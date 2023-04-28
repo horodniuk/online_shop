@@ -14,37 +14,36 @@ import java.time.LocalDateTime;
 @Aspect
 public class OrderServiceAspect {
 
-  /*  @AfterReturning(value = "execution(* com.example.online_shop.service.impl.OrderServiceImpl.saveOrder(*))",
+    @AfterReturning(value = "execution(* com.example.online_shop.service.impl.OrderServiceImpl.saveOrder(*))",
             returning = "order")
     public void afterReturningWhenCreated(OrderResponseDto order) {
-        String message = "Order with id = {}, date - {} and userId - {} was created.";
+        String message = "Order with id = {}, date - {} was created.";
         logOrder(order, message);
     }
 
     @AfterReturning(value = "execution(* com.example.online_shop.service.impl.OrderServiceImpl.deleteOrder(*))",
             returning = "order")
     public void afterReturningWhenDeleted(OrderResponseDto order) {
-        String message = "Order with id = {}, date - {} and userId - {} was deleted.";
+        String message = "Order with id = {}, date - {} was deleted.";
         logOrder(order, message);
     }
 
     @AfterReturning(value = "execution(* com.example.online_shop.service.impl.OrderServiceImpl.editOrder(*))",
             returning = "order")
     public void afterReturningWhenEdited(OrderResponseDto order) {
-        String message = "Order with id = {}, date - {} and userId - {} was edited.";
+        String message = "Order with id = {}, date - {} was edited.";
         logOrder(order, message);
     }
 
     private static void logOrder(OrderResponseDto order, String message) {
         Long orderId = order.getOrderId();
         LocalDateTime date = order.getOrderDate();
-        Long userId = order.getUserId();
-        log.info(message, orderId, date, userId);
+        log.info(message, orderId, date);
     }
 
     @AfterThrowing(value = "execution(* com.example.online_shop.service.impl.OrderServiceImpl.*(..))",
             throwing = "exception")
     public void afterThrowing(Throwable exception) {
         log.warn(exception.getMessage());
-    }*/
+    }
 }

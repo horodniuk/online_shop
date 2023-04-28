@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ProductServiceAspect {
 
-/*    @AfterReturning(value = "execution(* com.example.online_shop.service.impl.ProductServiceImpl.create(*))",
+    @AfterReturning(value = "execution(* com.example.online_shop.service.impl.ProductServiceImpl.create(*))",
             returning = "product")
     public void afterReturningWhenCreated(Product product) {
         String message = "Product with id = {}, name - {} and price - {} was created.";
@@ -44,5 +44,5 @@ public class ProductServiceAspect {
             throwing = "exception")
     public void afterThrowingInProductService(Throwable exception) {
         log.warn(exception.getMessage());
-    }*/
+    }
 }

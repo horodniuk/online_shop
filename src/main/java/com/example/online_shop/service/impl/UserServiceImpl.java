@@ -1,7 +1,7 @@
 package com.example.online_shop.service.impl;
 
-import com.example.online_shop.dto.requestDto.OrderRequestDto;
 import com.example.online_shop.dto.requestDto.OrderInfoRequestDto;
+import com.example.online_shop.dto.requestDto.OrderRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Order;
@@ -9,9 +9,10 @@ import com.example.online_shop.entity.Product;
 import com.example.online_shop.entity.Role;
 import com.example.online_shop.entity.User;
 import com.example.online_shop.exception.OrderNotFoundException;
+import com.example.online_shop.exception.UserNotFoundException;
 import com.example.online_shop.repository.OrderRepository;
-import com.example.online_shop.repository.ProductRepository;
 import com.example.online_shop.repository.UserRepository;
+import com.example.online_shop.service.ProductService;
 import com.example.online_shop.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +32,13 @@ import static com.example.online_shop.entity.Role.USER;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
     private final OrderRepository orderRepository;
 
-
+    @Transactional
     @Override
     public UserResponseDto addOrder(OrderRequestDto orderRequestDto) {
-        User user = userRepository.findById(orderRequestDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + orderRequestDto.getUserId()));
+        User user = getUser(orderRequestDto.getUserId());
 
         double totalPrice = getTotalPrice(orderRequestDto);
 
@@ -52,25 +52,23 @@ public class UserServiceImpl implements UserService {
         orderRepository.save(order);
 
         user.setBalance(user.getBalance() - totalPrice);
-        userRepository.save(user);
 
         return modelMapper.map(user, UserResponseDto.class);
     }
 
+    @Transactional
     @Override
     public UserResponseDto removeOrder(OrderInfoRequestDto orderRequestDto) {
-        User user = userRepository.findById(orderRequestDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + orderRequestDto.getUserId()));
+        User user = getUser(orderRequestDto.getUserId());
 
         Order order = user.getOrders().stream()
                 .filter(o -> o.getOrderId().equals(orderRequestDto.getOrderId()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderRequestDto.getOrderId()));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + orderRequestDto.getOrderId()));
 
         Map<Long, Integer> products = orderRequestDto.getProducts();
         removeProductToOrder(order, products);
         updateBalanceAfterRefund(user, order);
-        userRepository.save(user);
 
         return modelMapper.map(user, UserResponseDto.class);
     }
@@ -121,7 +119,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new OrderNotFoundException("Order with id " + userId + " not found!"));
+                () -> new UserNotFoundException("User with id " + userId + " not found!"));
     }
 
     @Transactional
@@ -161,7 +159,7 @@ public class UserServiceImpl implements UserService {
         if (sumToAdd > 0) {
             user.setBalance(balance + sumToAdd);
         } else throw new IllegalArgumentException("The sum to replenish the balance must be greater than null! " +
-                                               "Sum you entered is: " + sumToAdd);
+                                                  "Sum you entered is: " + sumToAdd);
         Double newBalance = user.getBalance();
         return "New balance of user " + userId + " is: " + newBalance;
     }
@@ -169,22 +167,17 @@ public class UserServiceImpl implements UserService {
     private double getTotalPrice(OrderRequestDto orderRequestDto) {
         return orderRequestDto.getProducts().entrySet().stream()
                 .mapToDouble(entry -> {
-                    Product product = productRepository
-                            .findById(entry.getKey())
-                            .orElseThrow(() -> new RuntimeException("Product not found with id: " + entry.getKey()));
+                    Product product = productService.getById(entry.getKey());
                     return product.getPrice() * entry.getValue();
                 })
                 .sum();
     }
 
 
-
     private Map<Product, Integer> putProductToOrder(OrderRequestDto orderRequestDto) {
         Map<Product, Integer> products = new HashMap<>();
         for (Map.Entry<Long, Integer> entry : orderRequestDto.getProducts().entrySet()) {
-            Product product = productRepository
-                    .findById(entry.getKey())
-                    .orElseThrow(() -> new RuntimeException("Product not found with id: " + entry.getKey()));
+            Product product = productService.getById(entry.getKey());
             products.put(product, entry.getValue());
         }
         return products;
@@ -194,9 +187,7 @@ public class UserServiceImpl implements UserService {
         for (Map.Entry<Long, Integer> entry : products.entrySet()) {
             Long productId = entry.getKey();
             Integer quantity = entry.getValue();
-            Product product = productRepository
-                    .findById(productId)
-                    .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+            Product product = productService.getById(productId);
             order.removeProducts(product, quantity);
         }
     }
