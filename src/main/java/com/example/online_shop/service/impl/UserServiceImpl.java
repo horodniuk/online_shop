@@ -1,8 +1,7 @@
 package com.example.online_shop.service.impl;
 
-import com.example.online_shop.dto.requestDto.OrderInfoRequestDto;
-import com.example.online_shop.dto.requestDto.OrderRequestDto;
-import com.example.online_shop.dto.requestDto.UserRequestDto;
+import com.example.online_shop.dto.requestDto.*;
+import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Order;
 import com.example.online_shop.entity.Product;
@@ -19,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +73,8 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserResponseDto.class);
     }
 
+
+
     private void updateBalanceAfterRefund(User user, Order order) {
         double orderPrice = order.getProducts().entrySet().stream()
                 .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
@@ -80,6 +82,35 @@ public class UserServiceImpl implements UserService {
         user.setBalance(user.getBalance() + orderPrice);
     }
 
+
+    @Override
+    public List<OrderResponseDto> findAllOrdersByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User with id " + userId + " not found"));
+
+        List<Order> orders = user.getOrders();
+        List<OrderResponseDto> ordersTemp = new ArrayList<>();
+
+        for (Order order : orders) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto();
+            orderResponseDto.setOrderId(order.getOrderId());
+            orderResponseDto.setOrderDate(order.getOrderDate());
+            orderResponseDto.setTotalPrice(order.getTotalPrice());
+
+            Map<ProductRequestDto, Integer> products = new HashMap<>();
+            for (Map.Entry<Product, Integer> entry : order.getProducts().entrySet()) {
+                Product product = entry.getKey();
+                ProductRequestDto productRequestDto = new ProductRequestDto();
+                productRequestDto.setProductId(product.getProductId());
+                productRequestDto.setName(product.getName());
+                productRequestDto.setPrice(product.getPrice());
+                products.put(productRequestDto, entry.getValue());
+            }
+            orderResponseDto.setProducts(products);
+            ordersTemp.add(orderResponseDto);
+        }
+        return ordersTemp;
+    }
 
     @Override
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
@@ -150,11 +181,11 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public String addBalance(UserRequestDto userRequestDto) {
-        Long userId = userRequestDto.getUserId();
+    public String addBalance(UserIdRequestDto userIdRequestDto) {
+        Long userId = userIdRequestDto.getUserId();
         User user = getUser(userId);
         Double balance = user.getBalance();
-        Double sumToAdd = userRequestDto.getBalance();
+        Double sumToAdd = userIdRequestDto.getBalance();
 
         if (sumToAdd > 0) {
             user.setBalance(balance + sumToAdd);
