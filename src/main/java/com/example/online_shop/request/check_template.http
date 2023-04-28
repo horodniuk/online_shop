@@ -2,7 +2,7 @@
 POST http://localhost:8080/api/superadmin/admin
 Content-Type: application/json
 Accept: application/json
-Authorization: Basic ivanov@gmail.com 123
+Authorization: Basic petrov@gmail.com 123
 
 {
   "firstName": "admin",
@@ -35,9 +35,12 @@ Authorization: Basic olegov@gmail.com 123
 }
 
 ### admin - blockUser   //блокує
-PUT http://localhost:8080/api/admin/user
+PUT http://localhost:8080/api/admin/user/block/6
 Authorization: Basic olegov@gmail.com 123
-//impl
+
+### admin - unblockUser   //розблоковує
+PUT http://localhost:8080/api/admin/user/unblock/6
+Authorization: Basic olegov@gmail.com 123
 
 ### admin - deleteUser  // Додавати продукти
 DELETE http://localhost:8080/api/admin/user/6
@@ -111,12 +114,19 @@ Content-Type: application/json
 Accept: application/json
 Authorization: Basic ivanov@gmail.com 123
 
-//impl
+
 ###  user - registerUser   // Реєстрація
 POST http://localhost:8080/api/user/register
 Content-Type: application/json
 Accept: application/json
 Authorization: Basic ivanov@gmail.com 123
+
+{
+"firstName": "new user",
+"lastName": "new user",
+"email": "user3@gmail.com",
+"password":"123"
+}
 
 
 ###  user - editProfile // Оновити особистий профіль

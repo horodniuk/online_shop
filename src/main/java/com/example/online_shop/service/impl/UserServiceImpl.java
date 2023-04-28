@@ -84,6 +84,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setBalance(user.getBalance() + orderPrice);
     }
 
+    @Override
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new UserNotFoundException("User with id " + userId + " not found!"));
+    }
+
 
     @Override
     public List<OrderResponseDto> findAllOrdersByUserId(Long userId) {
@@ -124,7 +131,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return setUserDetails(userRequestDto, ADMIN);
     }
 
-    private UserResponseDto setUserDetails(UserRequestDto userRequestDto, Role role) {
+    public UserResponseDto setUserDetails(UserRequestDto userRequestDto, Role role) {
         User user = new User();
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
@@ -147,12 +154,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserResponseDto getUserById(Long userId) {
         User user = getUser(userId);
         return modelMapper.map(user, UserResponseDto.class);
-    }
-
-    @Override
-    public User getUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("User with id " + userId + " not found!"));
     }
 
     @Transactional
@@ -228,27 +229,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> userEntity = userRepository.findByEmail(email);
-        return userEntity.map(user -> {
-            if (user.isBlocked()) {
-                throw new RuntimeException("User is blocked: " + email);
-            }
-            return new org.springframework.security.core.userdetails.User(
-                    user.getEmail(),
-                    user.getPassword(),
-                    Collections.singleton(user.getRole())
-            );
-        }).orElseThrow(() -> new RuntimeException("User not found: " + email));
+        return userEntity.orElseThrow(() -> new UsernameNotFoundException("User name Not Found: " + email));
     }
 
+    @Transactional
     @Override
-    public void blockUser(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        userOptional.ifPresent(User::block);
+    public UserResponseDto blockUser(Long userId) {
+        User user = getUser(userId);
+        user.setBlocked(true);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
+    @Transactional
     @Override
-    public void unblockUser(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        userOptional.ifPresent(User::unblock);
+    public UserResponseDto unblockUser(Long userId) {
+        User user = getUser(userId);
+        user.setBlocked(false);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 }

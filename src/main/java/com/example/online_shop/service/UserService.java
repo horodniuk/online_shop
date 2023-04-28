@@ -36,7 +36,7 @@ public interface UserService {
 
     List<OrderResponseDto> findAllOrdersByUserId(Long userId);
 
-    void blockUser(Long userId);
+     UserResponseDto blockUser(Long userId);
 
-    void unblockUser(Long userId);
+     UserResponseDto unblockUser(Long userId);
 }

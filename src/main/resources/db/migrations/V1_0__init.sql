@@ -2,7 +2,7 @@ CREATE TABLE users(
     user_id                 int  not null generated always as identity,
     first_name              varchar not null,
     last_name               varchar not null,
-    email                   varchar not null,
+    email                   varchar not null unique,
     balance                 double precision,
     password                varchar,
     role                    varchar ,

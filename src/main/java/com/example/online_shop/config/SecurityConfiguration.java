@@ -19,10 +19,13 @@ public class SecurityConfiguration {
         http
                  .cors(cors->cors.disable())
                  .authorizeHttpRequests((authz) -> authz
-                            /*   .requestMatchers("/api/user").hasAuthority(Role.USER.getAuthority())
-                               .requestMatchers("/api/admin").hasAuthority(Role.ADMIN.getAuthority())
-                               .requestMatchers("/api/superadmin").hasAuthority(Role.SUPER_ADMIN.getAuthority())
-                               .requestMatchers("/ping").permitAll()*/
+                         .requestMatchers("/api/user/**").hasAuthority(Role.USER.getAuthority())
+                         .requestMatchers("/api/user").hasAuthority(Role.USER.getAuthority())
+                         .requestMatchers("/api/admin/**").hasAuthority(Role.ADMIN.getAuthority())
+                         .requestMatchers("/api/admin").hasAuthority(Role.ADMIN.getAuthority())
+                         .requestMatchers("/api/superadmin/**").hasAnyAuthority(Role.SUPER_ADMIN.getAuthority())
+                         .requestMatchers("/api/superadmin").hasAnyAuthority(Role.SUPER_ADMIN.getAuthority())
+                         .requestMatchers("/ping").permitAll()
                                .anyRequest().authenticated())
                 .csrf().disable()
                 .httpBasic(Customizer.withDefaults());

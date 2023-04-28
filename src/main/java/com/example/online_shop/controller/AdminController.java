@@ -42,9 +42,14 @@ public class AdminController {
         return productService.editProduct(product);
     }
 
-    @PutMapping("/user")
-    public UserResponseDto blockUser(@RequestBody UserRequestDto userRequestDto) {
-        return userService.editUser(userRequestDto);
+    @PutMapping("/user/block/{id}")
+    public UserResponseDto blockUser(@PathVariable("id") Long userId) {
+        return userService.blockUser(userId);
+    }
+
+    @PutMapping("/user/unblock/{id}")
+    public UserResponseDto unblockUser(@PathVariable("id") Long userId) {
+        return userService.unblockUser(userId);
     }
 
 }

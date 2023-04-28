@@ -6,11 +6,13 @@ import com.example.online_shop.dto.requestDto.UserIdRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
 import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
-import com.example.online_shop.entity.Order;
+import com.example.online_shop.entity.Role;
 import com.example.online_shop.service.OrderService;
 import com.example.online_shop.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,4 +59,5 @@ public class UserController {
     public String addBalance(@RequestBody @Valid UserIdRequestDto userIdRequestDto) {
         return userService.addBalance(userIdRequestDto);
     }
+
 }
