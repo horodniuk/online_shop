@@ -2,7 +2,9 @@ package com.example.online_shop.service;
 
 import com.example.online_shop.dto.requestDto.OrderRequestDto;
 import com.example.online_shop.dto.requestDto.OrderInfoRequestDto;
+import com.example.online_shop.dto.requestDto.UserIdRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
+import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.User;
 
@@ -26,9 +28,11 @@ public interface UserService {
 
     UserResponseDto changeUserToAdmin(Long userId);
 
-    String addBalance(UserRequestDto userRequestDto);
+    String addBalance(UserIdRequestDto userIdRequestDto);
 
     UserResponseDto addOrder(OrderRequestDto orderRequestDto);
 
     UserResponseDto removeOrder(OrderInfoRequestDto orderRequestDto);
+
+    List<OrderResponseDto> findAllOrdersByUserId(Long userId);
 }

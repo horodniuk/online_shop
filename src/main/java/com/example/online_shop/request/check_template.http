@@ -1,4 +1,4 @@
-### superadmin - addAdmin
+### superadmin - addAdmin  // Додавати
 POST http://localhost:8080/api/superadmin/admin
 Content-Type: application/json
 Accept: application/json
@@ -11,27 +11,31 @@ Accept: application/json
   "balance": 100.00
 }
 
-### superadmin - deleteAdmin
+### superadmin - deleteAdmin  // видаляти адмінів
 DELETE http://localhost:8080/api/superadmin/admin/4
 
-### superadmin - assignAdmin
+### superadmin - assignAdmin  // призначати нових
 PUT http://localhost:8080/api/superadmin/admin/1
 
 
-### admin - addUser
+### admin - addUser   // може створювати
 POST http://localhost:8080/api/admin/user
 Content-Type: application/json
 Accept: application/json
 
 {
-  "firstName": "user",
-  "lastName": "user",
-  "email": "user@gmail.com",
+  "firstName": "Andrey",
+  "lastName": "Andreev",
+  "email": "andrey@gmail.com",
   "password":"123",
-  "balance": 100.00
+  "balance": 1000.00
 }
 
-### admin - deleteUser
+### admin - blockUser   //блокує
+PUT http://localhost:8080/api/admin/user
+//impl
+
+### admin - deleteUser  // Додавати продукти
 DELETE http://localhost:8080/api/admin/user/6
 
 
@@ -45,10 +49,10 @@ Accept: application/json
   "price": 5.00
 }
 
-### admin - deleteProduct
+### admin - deleteProduct  //видаляти продукти
 DELETE http://localhost:8080/api/admin/product/4
 
-### admin - editProduct
+### admin - editProduct // оновлювати інфо про продукти
 PUT http://localhost:8080/api/admin/product
 Content-Type: application/json
 Accept: application/json
@@ -59,26 +63,20 @@ Accept: application/json
   "price": 70.0
 }
 
-### admin - blockUser
-PUT http://localhost:8080/api/admin/user
-//impl
-
-
-
-### user - addOrder
+### user - addOrder // Додати продукт в заказ
 POST http://localhost:8080/api/user/order
 Content-Type: application/json
 Accept: application/json
 
 {
-  "userId": 1,
+  "userId": 7,
   "products": {
     "1": 2,
     "2": 1
   }
 }
 
-### user - removeProductInOrder
+### user - removeProductToOrder // видалити продукт з заказа
 DELETE http://localhost:8080/api/user/order
 Content-Type: application/json
 Accept: application/json
@@ -91,16 +89,46 @@ Accept: application/json
   }
 }
 
+### user - findAllOrdersByUserId  // переглянути список ордерів у юзера
+GET http://localhost:8080/api/user/orders/1
+Content-Type: application/json
+Accept: application/json
+
+###  user - findById  // переглянути конкретний ордер
+GET http://localhost:8080/api/user/order/8
+Content-Type: application/json
+Accept: application/json
+
+//impl
+###  user - registerUser   // Реєстрація
+POST http://localhost:8080/api/user/register
+Content-Type: application/json
+Accept: application/json
 
 
+###  user - editProfile // Оновити особистий профіль
+PUT http://localhost:8080/api/user/profile
+Content-Type: application/json
+Accept: application/json
 
+{
+  "userId": 1,
+  "firstName": "Ivan2",
+  "lastName": "Ivanov2",
+  "email": "ivanov@gmail.com",
+  "password": "123",
+  "balance": 800
+}
 
+###  add - balance  // додати кошти на баланс
+PUT http://localhost:8080/api/user/balance
+Content-Type: application/json
+Accept: application/json
 
-
-
-
-
-
+{
+  "userId": 7,
+  "balance": 2000
+}
 
 
 

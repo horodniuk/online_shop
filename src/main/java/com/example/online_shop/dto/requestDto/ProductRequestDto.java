@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ProductRequestDto {
+    private Long productId;
+
     @NotBlank(message = "Name of product is required field")
     private String name;
 

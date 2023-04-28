@@ -42,7 +42,6 @@ public class AdminController {
         return productService.editProduct(product);
     }
 
-    //method needs to be reviewed
     @PutMapping("/user")
     public UserResponseDto blockUser(@RequestBody UserRequestDto userRequestDto) {
         return userService.editUser(userRequestDto);

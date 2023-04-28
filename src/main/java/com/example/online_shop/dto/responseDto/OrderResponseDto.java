@@ -1,7 +1,6 @@
 package com.example.online_shop.dto.responseDto;
 
 import com.example.online_shop.dto.requestDto.ProductRequestDto;
-import com.example.online_shop.entity.Product;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
