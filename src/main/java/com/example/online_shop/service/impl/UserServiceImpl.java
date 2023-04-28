@@ -1,23 +1,23 @@
 package com.example.online_shop.service.impl;
 
-import com.example.online_shop.dto.requestDto.CartRequestDto;
+import com.example.online_shop.dto.requestDto.OrderRequestDto;
+import com.example.online_shop.dto.requestDto.OrderInfoRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
-import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Order;
 import com.example.online_shop.entity.Product;
 import com.example.online_shop.entity.Role;
 import com.example.online_shop.entity.User;
 import com.example.online_shop.exception.OrderNotFoundException;
+import com.example.online_shop.repository.OrderRepository;
+import com.example.online_shop.repository.ProductRepository;
 import com.example.online_shop.repository.UserRepository;
-import com.example.online_shop.service.OrderService;
 import com.example.online_shop.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,53 +31,55 @@ import static com.example.online_shop.entity.Role.USER;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final ProductServiceImpl productService;
-    private final OrderService orderService;
+    private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
-
-    @Transactional
-    @Override
-    public UserResponseDto addProductToCart(CartRequestDto cartDto) {
-        User user = getUser(cartDto.getUserId());
-        Product product = productService.getById(cartDto.getProductId());
-        user.addProductToCart(product, cartDto.getQuantity());
-        return modelMapper.map(user, UserResponseDto.class);
-    }
-
-    @Transactional
-    @Override
-    public UserResponseDto removeProductFromCart(CartRequestDto cartDto) {
-        User user = getUser(cartDto.getUserId());
-        Product product = productService.getById(cartDto.getProductId());
-        user.removeProductFromCart(product, cartDto.getQuantity());
-        System.out.println(user.getCart());
-        return modelMapper.map(user, UserResponseDto.class);
-    }
 
     @Override
-    public UserResponseDto addOrderToUser(Long userId) {
-        User user = getUser(userId);
-        Map<Product, Integer> cart = user.getCart();
-        if (cart.isEmpty()) {
-            throw new IllegalArgumentException("The cart is empty, first you need to add products in it");
+    public UserResponseDto addOrder(OrderRequestDto orderRequestDto) {
+        User user = userRepository.findById(orderRequestDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + orderRequestDto.getUserId()));
+
+        double totalPrice = getTotalPrice(orderRequestDto);
+
+        if (totalPrice > user.getBalance()) {
+            throw new RuntimeException("User does not have enough balance.");
         }
-        addNewOrder(user, cart);
+
+        Order order = new Order(user);
+        Map<Product, Integer> products = putProductToOrder(orderRequestDto);
+        order.setProducts(products);
+        orderRepository.save(order);
+
+        user.setBalance(user.getBalance() - totalPrice);
+        userRepository.save(user);
+
         return modelMapper.map(user, UserResponseDto.class);
     }
 
-    private void addNewOrder(User user, Map<Product, Integer> cart) {
-        List<Order> orders = user.getOrders();
-        double totalPrice = cart.entrySet().stream()
+    @Override
+    public UserResponseDto removeOrder(OrderInfoRequestDto orderRequestDto) {
+        User user = userRepository.findById(orderRequestDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + orderRequestDto.getUserId()));
+
+        Order order = user.getOrders().stream()
+                .filter(o -> o.getOrderId().equals(orderRequestDto.getOrderId()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderRequestDto.getOrderId()));
+
+        Map<Long, Integer> products = orderRequestDto.getProducts();
+        removeProductToOrder(order, products);
+        updateBalanceAfterRefund(user, order);
+        userRepository.save(user);
+
+        return modelMapper.map(user, UserResponseDto.class);
+    }
+
+    private void updateBalanceAfterRefund(User user, Order order) {
+        double orderPrice = order.getProducts().entrySet().stream()
                 .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
                 .sum();
-        double balance = user.getBalance();
-        if (balance >= totalPrice) {
-            Order newOrder = new Order(user);
-            orders.add(newOrder);
-            user.setBalance(balance - totalPrice);
-            orderService.saveOrder(newOrder);
-            user.setCart(new HashMap<>());
-        } else throw new IllegalArgumentException("Not enough money. Top up balance");
+        user.setBalance(user.getBalance() + orderPrice);
     }
 
 
@@ -148,54 +150,6 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserResponseDto.class);
     }
 
-
-
-    @Transactional
-    @Override
-    public UserResponseDto removeOrderFromUser(Long userId, Long orderId) {
-        User user = getUser(userId);
-        Order order = orderService.getOrder(orderId);
-        user.getOrders().remove(order);
-        orderService.deleteOrder(orderId);
-        return modelMapper.map(user, UserResponseDto.class);
-    }
-
-
-
-
-
-    private boolean isProductInCart(Order cart, Product product) {
-        return cart.getProducts().containsKey(product);
-    }
-
-    private void removeProduct(int quantity, Order cart, Product product, int quantityInCart) {
-        if (quantityInCart < quantity)
-            throw new IllegalArgumentException("Not enough quantity of " + product.getName() + " in cart. " +
-                                               "Cart has: " + quantityInCart + " and you want to remove: " + quantity);
-        else if (quantityInCart == quantity) cart.getProducts().remove(product);
-        else cart.getProducts().put(product, quantityInCart - quantity);
-    }
-
-    @Override
-    public UserResponseDto clearCart(Long userId) {
-        User user = getUser(userId);
-        user.getCart().clear();
-        return modelMapper.map(user, UserResponseDto.class);
-    }
-
-    @Override
-    public Map<Product, Integer> showAllProductsInCart(Long userId) {
-        User user = getUser(userId);
-        return user.getCart();
-    }
-
-    @Override
-    public List<OrderResponseDto> getAllUserOrders(Long userId) {
-        User user = getUser(userId);
-        return user.getOrders().stream()
-                .map(order -> modelMapper.map(order, OrderResponseDto.class)).toList();
-    }
-
     @Transactional
     @Override
     public String addBalance(UserRequestDto userRequestDto) {
@@ -211,4 +165,40 @@ public class UserServiceImpl implements UserService {
         Double newBalance = user.getBalance();
         return "New balance of user " + userId + " is: " + newBalance;
     }
+
+    private double getTotalPrice(OrderRequestDto orderRequestDto) {
+        return orderRequestDto.getProducts().entrySet().stream()
+                .mapToDouble(entry -> {
+                    Product product = productRepository
+                            .findById(entry.getKey())
+                            .orElseThrow(() -> new RuntimeException("Product not found with id: " + entry.getKey()));
+                    return product.getPrice() * entry.getValue();
+                })
+                .sum();
+    }
+
+
+
+    private Map<Product, Integer> putProductToOrder(OrderRequestDto orderRequestDto) {
+        Map<Product, Integer> products = new HashMap<>();
+        for (Map.Entry<Long, Integer> entry : orderRequestDto.getProducts().entrySet()) {
+            Product product = productRepository
+                    .findById(entry.getKey())
+                    .orElseThrow(() -> new RuntimeException("Product not found with id: " + entry.getKey()));
+            products.put(product, entry.getValue());
+        }
+        return products;
+    }
+
+    private void removeProductToOrder(Order order, Map<Long, Integer> products) {
+        for (Map.Entry<Long, Integer> entry : products.entrySet()) {
+            Long productId = entry.getKey();
+            Integer quantity = entry.getValue();
+            Product product = productRepository
+                    .findById(productId)
+                    .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+            order.removeProducts(product, quantity);
+        }
+    }
+
 }

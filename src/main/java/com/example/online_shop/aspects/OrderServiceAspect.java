@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Aspect
 public class OrderServiceAspect {
 
-    @AfterReturning(value = "execution(* com.example.online_shop.service.impl.OrderServiceImpl.saveOrder(*))",
+  /*  @AfterReturning(value = "execution(* com.example.online_shop.service.impl.OrderServiceImpl.saveOrder(*))",
             returning = "order")
     public void afterReturningWhenCreated(OrderResponseDto order) {
         String message = "Order with id = {}, date - {} and userId - {} was created.";
@@ -46,5 +46,5 @@ public class OrderServiceAspect {
             throwing = "exception")
     public void afterThrowing(Throwable exception) {
         log.warn(exception.getMessage());
-    }
+    }*/
 }

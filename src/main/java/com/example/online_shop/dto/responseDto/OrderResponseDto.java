@@ -1,5 +1,6 @@
 package com.example.online_shop.dto.responseDto;
 
+import com.example.online_shop.dto.requestDto.ProductRequestDto;
 import com.example.online_shop.entity.Product;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,6 @@ import java.util.Map;
 public class OrderResponseDto {
     private Long orderId;
     private LocalDateTime orderDate;
-    private Long userId;
-    private Map<Product, Integer> products;
+    private Double totalPrice;
+    private Map<ProductRequestDto, Integer> products;
 }

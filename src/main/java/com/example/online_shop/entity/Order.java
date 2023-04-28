@@ -1,5 +1,6 @@
 package com.example.online_shop.entity;
 
+import com.example.online_shop.service.ProductService;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
 
 @Entity
 @Table(name = "orders")
@@ -39,12 +41,24 @@ public class Order {
         this.orderDate = LocalDateTime.now();
     }
 
-    public void addProduct(Product product, int quantity) {
-        this.products.put(product, quantity);
+    public void addProducts(Map<Long, Integer> products, ProductService productService) {
+        Map<Product, Integer> productsTemp = new HashMap<>();
+        for (Map.Entry<Long, Integer> entry : products.entrySet()) {
+            Product product = productService.getById(entry.getKey());
+            productsTemp.put(product, entry.getValue());
+        }
+        this.products.putAll(productsTemp);
     }
 
-    public void addProducts(Map<Product, Integer> products) {
-        products.forEach(this::addProduct);
+    public void removeProducts(Product product, int quantity) {
+        products.compute(product, (p, q) -> {
+            int newQuantity = q - quantity;
+            if (newQuantity <= 0) {
+                return null;
+            } else {
+                return newQuantity;
+            }
+        });
     }
 
     public double getTotalPrice() {

@@ -1,6 +1,6 @@
 package com.example.online_shop.service.impl;
 
-import com.example.online_shop.dto.requestDto.OrderRequestDto;
+import com.example.online_shop.dto.requestDto.OrderInfoRequestDto;
 import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.entity.Order;
 import com.example.online_shop.exception.OrderNotFoundException;
@@ -47,9 +47,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderResponseDto editOrder(OrderRequestDto orderRequestDto) {
+    public OrderResponseDto editOrder(OrderInfoRequestDto orderRequestDto) {
         Order order = getOrder(orderRequestDto.getOrderId());
-        order.setOrderDate(orderRequestDto.getOrderDate());
         return modelMapper.map(order, OrderResponseDto.class);
     }
 

@@ -49,37 +49,4 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
-    @Transient
-    private Map<Product, Integer> cart = new HashMap<>();
-
-    public User(String firstName, String lastName, String email, Double balance) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.balance = balance;
-    }
-
-    public void addProductToCart(Product product, int quantity) {
-            if (quantity < 0) {
-                throw new IllegalArgumentException("Quantity cannot be negative");
-            }
-            cart.merge(product, quantity, Integer::sum);
-    }
-
-    public void removeProductFromCart(Product product, int quantity) {
-        if (cart.containsKey(product)) {
-            int currentQuantity = cart.get(product);
-            if (currentQuantity < quantity) {
-                throw new IllegalArgumentException( product.getName() + " is not quantity in the cart to remove");
-            }
-            else if (currentQuantity == quantity) {
-                cart.remove(product);
-            } else {
-                cart.put(product, currentQuantity - quantity);
-            }
-        }
-        else {
-            System.out.println("Wrong implementation");
-        }
-    }
 }

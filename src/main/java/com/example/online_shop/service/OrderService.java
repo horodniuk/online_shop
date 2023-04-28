@@ -1,6 +1,6 @@
 package com.example.online_shop.service;
 
-import com.example.online_shop.dto.requestDto.OrderRequestDto;
+import com.example.online_shop.dto.requestDto.OrderInfoRequestDto;
 import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.entity.Order;
 
@@ -16,7 +16,7 @@ public interface OrderService {
 
     List<OrderResponseDto> findAll();
 
-    OrderResponseDto editOrder(OrderRequestDto orderRequestDto);
+    OrderResponseDto editOrder(OrderInfoRequestDto orderRequestDto);
 
     OrderResponseDto deleteOrder(Long orderId);
 }

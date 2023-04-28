@@ -1,21 +1,27 @@
 package com.example.online_shop.dto.responseDto;
 
-import com.example.online_shop.entity.Product;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Map;
+
 
 @Data
 @NoArgsConstructor
 public class UserResponseDto {
     private Long userId;
+    @NotBlank(message = "First name of user is required field.")
     private String firstName;
+    @NotBlank(message = "Last name of user is required field.")
     private String lastName;
+    @Pattern(regexp = "\\w+@\\w+\\.[a-z]{2,3}", message = "please use pattern hello@gmail.com")
     private String email;
-    private String role;
+    @NotBlank(message = "Password is required field")
+    private String password;
+    @Min(value = 0, message = "Balance must be bigger than -1.")
     private Double balance;
     private List<OrderResponseDto> orders;
-    private Map<Product, Integer> cart;
 }

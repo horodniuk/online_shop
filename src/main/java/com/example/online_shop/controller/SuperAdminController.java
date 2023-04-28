@@ -1,7 +1,6 @@
 package com.example.online_shop.controller;
 
 import com.example.online_shop.dto.requestDto.UserRequestDto;
-import com.example.online_shop.dto.requestDto.UserRequestToChangeDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.service.UserService;
 import jakarta.validation.Valid;
