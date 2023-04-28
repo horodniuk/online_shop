@@ -45,7 +45,21 @@ public class User {
     @Min(value = 0, message = "Balance must be bigger than -1.")
     private Double balance;
 
+    @Column(name = "is_blocked", nullable = false)
+    private boolean isBlocked;
+
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
+    public void block() {
+        if (this.role == Role.ADMIN) {
+            this.isBlocked = true;
+        }
+    }
+
+    public void unblock() {
+        if (this.role == Role.ADMIN) {
+            this.isBlocked = false;
+        }
+    }
 }

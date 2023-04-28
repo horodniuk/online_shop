@@ -16,12 +16,13 @@ import com.example.online_shop.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.online_shop.entity.Role.ADMIN;
@@ -29,11 +30,12 @@ import static com.example.online_shop.entity.Role.USER;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final ProductService productService;
     private final OrderRepository orderRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
@@ -127,7 +129,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
         user.setEmail(userRequestDto.getEmail());
-        user.setPassword(userRequestDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
         user.setRole(role);
         user.setBalance(0D);
         userRepository.save(user);
@@ -223,4 +225,30 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> userEntity = userRepository.findByEmail(email);
+        return userEntity.map(user -> {
+            if (user.isBlocked()) {
+                throw new RuntimeException("User is blocked: " + email);
+            }
+            return new org.springframework.security.core.userdetails.User(
+                    user.getEmail(),
+                    user.getPassword(),
+                    Collections.singleton(user.getRole())
+            );
+        }).orElseThrow(() -> new RuntimeException("User not found: " + email));
+    }
+
+    @Override
+    public void blockUser(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        userOptional.ifPresent(User::block);
+    }
+
+    @Override
+    public void unblockUser(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        userOptional.ifPresent(User::unblock);
+    }
 }

@@ -1,8 +1,8 @@
 
 insert into users (first_name, last_name, email, balance, password, role)
-values ('Ivan', 'Ivanov', 'ivanov@gmail.com', 200.00, '123','USER') ,
-       ('Oleg', 'Olegov', 'olegov@gmail.com', 100.00, '123','ADMIN'),
-       ('Sergey', 'Petrov', 'petrov@gmail.com', 100.00, '123','SUPER_ADMIN');
+values ('Ivan', 'Ivanov', 'ivanov@gmail.com', 200.00, '$2a$10$2LdkND9A88hTOrefPs2Fy.ah2w5ZX3eBpqBsJXozsmA1B/h5WvFBi','USER') ,
+       ('Oleg', 'Olegov', 'olegov@gmail.com', 100.00, '$2a$10$2LdkND9A88hTOrefPs2Fy.ah2w5ZX3eBpqBsJXozsmA1B/h5WvFBi','ADMIN'),
+       ('Sergey', 'Petrov', 'petrov@gmail.com', 100.00, '$2a$10$2LdkND9A88hTOrefPs2Fy.ah2w5ZX3eBpqBsJXozsmA1B/h5WvFBi','SUPER_ADMIN');
 
 insert into products (name, price)
 VALUES ('beer', 50.00),

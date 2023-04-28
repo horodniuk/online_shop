@@ -35,4 +35,8 @@ public interface UserService {
     UserResponseDto removeOrder(OrderInfoRequestDto orderRequestDto);
 
     List<OrderResponseDto> findAllOrdersByUserId(Long userId);
+
+    void blockUser(Long userId);
+
+    void unblockUser(Long userId);
 }

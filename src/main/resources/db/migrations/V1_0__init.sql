@@ -6,6 +6,7 @@ CREATE TABLE users(
     balance                 double precision,
     password                varchar,
     role                    varchar ,
+    is_blocked              boolean default false,
     PRIMARY KEY (user_id)
 );
 
