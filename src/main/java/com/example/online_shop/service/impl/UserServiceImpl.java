@@ -1,9 +1,7 @@
 package com.example.online_shop.service.impl;
 
-import com.example.online_shop.dto.requestDto.OrderInfoRequestDto;
-import com.example.online_shop.dto.requestDto.OrderRequestDto;
-import com.example.online_shop.dto.requestDto.UserRequestDto;
-import com.example.online_shop.dto.responseDto.UserInfoResponseDto;
+import com.example.online_shop.dto.requestDto.*;
+import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Order;
 import com.example.online_shop.entity.Product;
@@ -18,11 +16,13 @@ import com.example.online_shop.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.online_shop.entity.Role.ADMIN;
@@ -30,11 +30,12 @@ import static com.example.online_shop.entity.Role.USER;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final ProductService productService;
     private final OrderRepository orderRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
@@ -74,6 +75,8 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserResponseDto.class);
     }
 
+
+
     private void updateBalanceAfterRefund(User user, Order order) {
         double orderPrice = order.getProducts().entrySet().stream()
                 .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
@@ -81,27 +84,63 @@ public class UserServiceImpl implements UserService {
         user.setBalance(user.getBalance() + orderPrice);
     }
 
+    @Override
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new UserNotFoundException("User with id " + userId + " not found!"));
+    }
+
 
     @Override
-    public UserInfoResponseDto createUser(UserRequestDto userRequestDto) {
+    public List<OrderResponseDto> findAllOrdersByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User with id " + userId + " not found"));
+
+        List<Order> orders = user.getOrders();
+        List<OrderResponseDto> ordersTemp = new ArrayList<>();
+
+        for (Order order : orders) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto();
+            orderResponseDto.setOrderId(order.getOrderId());
+            orderResponseDto.setOrderDate(order.getOrderDate());
+            orderResponseDto.setTotalPrice(order.getTotalPrice());
+
+            Map<ProductRequestDto, Integer> products = new HashMap<>();
+            for (Map.Entry<Product, Integer> entry : order.getProducts().entrySet()) {
+                Product product = entry.getKey();
+                ProductRequestDto productRequestDto = new ProductRequestDto();
+                productRequestDto.setProductId(product.getProductId());
+                productRequestDto.setName(product.getName());
+                productRequestDto.setPrice(product.getPrice());
+                products.put(productRequestDto, entry.getValue());
+            }
+            orderResponseDto.setProducts(products);
+            ordersTemp.add(orderResponseDto);
+        }
+        return ordersTemp;
+    }
+
+    @Override
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
         return setUserDetails(userRequestDto, USER);
     }
 
     @Override
-    public UserInfoResponseDto createAdmin(UserRequestDto userRequestDto) {
+    public UserResponseDto createAdmin(UserRequestDto userRequestDto) {
         return setUserDetails(userRequestDto, ADMIN);
     }
 
-    private UserInfoResponseDto setUserDetails(UserRequestDto userRequestDto, Role role) {
+    public UserResponseDto setUserDetails(UserRequestDto userRequestDto, Role role) {
         User user = new User();
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
         user.setEmail(userRequestDto.getEmail());
-        user.setPassword(userRequestDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
         user.setRole(role);
         user.setBalance(0D);
         userRepository.save(user);
-        return modelMapper.map(user, UserInfoResponseDto.class);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
     @Override
@@ -117,45 +156,39 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserResponseDto.class);
     }
 
-    @Override
-    public User getUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("User with id " + userId + " not found!"));
-    }
-
     @Transactional
     @Override
-    public UserInfoResponseDto deleteUser(Long userId) {
+    public UserResponseDto deleteUser(Long userId) {
         User user = getUser(userId);
         userRepository.delete(user);
-        return modelMapper.map(user, UserInfoResponseDto.class);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
     @Transactional
     @Override
-    public UserInfoResponseDto editUser(UserRequestDto userRequestDto) {
+    public UserResponseDto editUser(UserRequestDto userRequestDto) {
         User user = getUser(userRequestDto.getUserId());
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
         user.setEmail(userRequestDto.getEmail());
-        return modelMapper.map(user, UserInfoResponseDto.class);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
     @Transactional
     @Override
-    public UserInfoResponseDto changeUserToAdmin(Long userId) {
+    public UserResponseDto changeUserToAdmin(Long userId) {
         User user = getUser(userId);
         user.setRole(ADMIN);
-        return modelMapper.map(user, UserInfoResponseDto.class);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
     @Transactional
     @Override
-    public String addBalance(UserRequestDto userRequestDto) {
-        Long userId = userRequestDto.getUserId();
+    public String addBalance(UserIdRequestDto userIdRequestDto) {
+        Long userId = userIdRequestDto.getUserId();
         User user = getUser(userId);
         Double balance = user.getBalance();
-        Double sumToAdd = userRequestDto.getBalance();
+        Double sumToAdd = userIdRequestDto.getBalance();
 
         if (sumToAdd > 0) {
             user.setBalance(balance + sumToAdd);
@@ -193,4 +226,25 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> userEntity = userRepository.findByEmail(email);
+        return userEntity.orElseThrow(() -> new UsernameNotFoundException("User name Not Found: " + email));
+    }
+
+    @Transactional
+    @Override
+    public UserResponseDto blockUser(Long userId) {
+        User user = getUser(userId);
+        user.setBlocked(true);
+        return modelMapper.map(user, UserResponseDto.class);
+    }
+
+    @Transactional
+    @Override
+    public UserResponseDto unblockUser(Long userId) {
+        User user = getUser(userId);
+        user.setBlocked(false);
+        return modelMapper.map(user, UserResponseDto.class);
+    }
 }

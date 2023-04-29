@@ -6,17 +6,21 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.catalina.UserDatabase;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+
 
 @Entity
 @Data
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -46,7 +50,51 @@ public class User {
     @Min(value = 0, message = "Balance must be bigger than -1.")
     private Double balance;
 
+    @Column(name = "is_blocked", nullable = false)
+    private boolean isBlocked;
+
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
+    public void block() {
+        if (this.role == Role.ADMIN) {
+            this.isBlocked = true;
+        }
+    }
+
+    public void unblock() {
+        if (this.role == Role.ADMIN) {
+            this.isBlocked = false;
+        }
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(this.getRole());
+    }
+
+    @Override
+    public String getUsername() {
+         return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !isBlocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

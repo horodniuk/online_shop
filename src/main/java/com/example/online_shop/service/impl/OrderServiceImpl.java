@@ -1,9 +1,12 @@
 package com.example.online_shop.service.impl;
 
 import com.example.online_shop.dto.requestDto.OrderInfoRequestDto;
+import com.example.online_shop.dto.requestDto.ProductRequestDto;
 import com.example.online_shop.dto.responseDto.OrderResponseDto;
 import com.example.online_shop.entity.Order;
+import com.example.online_shop.entity.Product;
 import com.example.online_shop.exception.OrderNotFoundException;
+import com.example.online_shop.exception.UserNotFoundException;
 import com.example.online_shop.repository.OrderRepository;
 import com.example.online_shop.service.OrderService;
 import jakarta.transaction.Transactional;
@@ -11,7 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,4 +65,5 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.delete(order);
         return modelMapper.map(order, OrderResponseDto.class);
     }
+
 }

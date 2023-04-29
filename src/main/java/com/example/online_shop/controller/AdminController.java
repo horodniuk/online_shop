@@ -2,7 +2,6 @@ package com.example.online_shop.controller;
 
 import com.example.online_shop.dto.requestDto.ProductRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
-import com.example.online_shop.dto.responseDto.UserInfoResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Product;
 import com.example.online_shop.service.ProductService;
@@ -19,12 +18,12 @@ public class AdminController {
     private final ProductService productService;
 
     @DeleteMapping("/user/{id}")
-    public UserInfoResponseDto deleteUser(@PathVariable("id") Long userId) {
+    public UserResponseDto deleteUser(@PathVariable("id") Long userId) {
         return userService.deleteUser(userId);
     }
 
     @PostMapping("/user")
-    public UserInfoResponseDto addUser(@RequestBody @Valid UserRequestDto userRequestDto) {
+    public UserResponseDto addUser(@RequestBody @Valid UserRequestDto userRequestDto) {
         return userService.createUser(userRequestDto);
     }
 
@@ -43,10 +42,14 @@ public class AdminController {
         return productService.editProduct(product);
     }
 
-    //method needs to be reviewed
-    @PutMapping("/user")
-    public UserInfoResponseDto blockUser(@RequestBody UserRequestDto userRequestDto) {
-        return userService.editUser(userRequestDto);
+    @PutMapping("/user/block/{id}")
+    public UserResponseDto blockUser(@PathVariable("id") Long userId) {
+        return userService.blockUser(userId);
+    }
+
+    @PutMapping("/user/unblock/{id}")
+    public UserResponseDto unblockUser(@PathVariable("id") Long userId) {
+        return userService.unblockUser(userId);
     }
 
 }
