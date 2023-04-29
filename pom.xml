@@ -124,7 +124,7 @@
                 <version>4.0.3</version>
                 <configuration>
                     <user>postgres</user>
-                    <password>1234</password>
+                    <password>riviera0685</password>
                     <schemas>
                         <schema>public</schema>
                     </schemas>

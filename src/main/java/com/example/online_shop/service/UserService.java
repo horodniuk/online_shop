@@ -5,6 +5,7 @@ import com.example.online_shop.dto.requestDto.OrderInfoRequestDto;
 import com.example.online_shop.dto.requestDto.UserIdRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
 import com.example.online_shop.dto.responseDto.OrderResponseDto;
+import com.example.online_shop.dto.responseDto.UserInfoResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.User;
 
@@ -12,9 +13,9 @@ import java.util.List;
 
 public interface UserService {
 
-    UserResponseDto createUser(UserRequestDto userRequestDto);
+    UserInfoResponseDto createUser(UserRequestDto userRequestDto);
 
-    UserResponseDto createAdmin(UserRequestDto userRequestDto);
+    UserInfoResponseDto createAdmin(UserRequestDto userRequestDto);
 
     List<UserResponseDto> getAllUsers();
 
@@ -22,11 +23,11 @@ public interface UserService {
 
     User getUser(Long userId);
 
-    UserResponseDto deleteUser(Long userId);
+    UserInfoResponseDto deleteUser(Long userId);
 
-    UserResponseDto editUser(UserRequestDto userRequestDto);
+    UserInfoResponseDto editUser(UserRequestDto userRequestDto);
 
-    UserResponseDto changeUserToAdmin(Long userId);
+    UserInfoResponseDto changeUserToAdmin(Long userId);
 
     String addBalance(UserIdRequestDto userIdRequestDto);
 
