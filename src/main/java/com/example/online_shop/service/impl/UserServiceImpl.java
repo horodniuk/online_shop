@@ -3,6 +3,7 @@ package com.example.online_shop.service.impl;
 import com.example.online_shop.dto.requestDto.OrderInfoRequestDto;
 import com.example.online_shop.dto.requestDto.OrderRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
+import com.example.online_shop.dto.responseDto.UserInfoResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Order;
 import com.example.online_shop.entity.Product;
@@ -82,16 +83,16 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+    public UserInfoResponseDto createUser(UserRequestDto userRequestDto) {
         return setUserDetails(userRequestDto, USER);
     }
 
     @Override
-    public UserResponseDto createAdmin(UserRequestDto userRequestDto) {
+    public UserInfoResponseDto createAdmin(UserRequestDto userRequestDto) {
         return setUserDetails(userRequestDto, ADMIN);
     }
 
-    private UserResponseDto setUserDetails(UserRequestDto userRequestDto, Role role) {
+    private UserInfoResponseDto setUserDetails(UserRequestDto userRequestDto, Role role) {
         User user = new User();
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
@@ -100,7 +101,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(role);
         user.setBalance(0D);
         userRepository.save(user);
-        return modelMapper.map(user, UserResponseDto.class);
+        return modelMapper.map(user, UserInfoResponseDto.class);
     }
 
     @Override
@@ -124,28 +125,28 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto deleteUser(Long userId) {
+    public UserInfoResponseDto deleteUser(Long userId) {
         User user = getUser(userId);
         userRepository.delete(user);
-        return modelMapper.map(user, UserResponseDto.class);
+        return modelMapper.map(user, UserInfoResponseDto.class);
     }
 
     @Transactional
     @Override
-    public UserResponseDto editUser(UserRequestDto userRequestDto) {
+    public UserInfoResponseDto editUser(UserRequestDto userRequestDto) {
         User user = getUser(userRequestDto.getUserId());
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
         user.setEmail(userRequestDto.getEmail());
-        return modelMapper.map(user, UserResponseDto.class);
+        return modelMapper.map(user, UserInfoResponseDto.class);
     }
 
     @Transactional
     @Override
-    public UserResponseDto changeUserToAdmin(Long userId) {
+    public UserInfoResponseDto changeUserToAdmin(Long userId) {
         User user = getUser(userId);
         user.setRole(ADMIN);
-        return modelMapper.map(user, UserResponseDto.class);
+        return modelMapper.map(user, UserInfoResponseDto.class);
     }
 
     @Transactional

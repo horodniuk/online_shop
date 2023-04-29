@@ -1,5 +1,6 @@
 package com.example.online_shop.aspects;
 
+import com.example.online_shop.dto.responseDto.UserInfoResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -14,12 +15,12 @@ public class UserServiceAspect {
 
     @AfterReturning(value = "execution(* com.example.online_shop.service.impl.UserServiceImpl.create*(*))",
             returning = "user")
-    public void afterReturningWhenCreated(UserResponseDto user) {
+    public void afterReturningWhenCreated(UserInfoResponseDto user) {
         var message = "User with id = {}, firstName - {}, lastName - {}, email - {} was created.";
         logUserChanges(user, message);
     }
 
-    private static void logUserChanges(UserResponseDto user, String message) {
+    private static void logUserChanges(UserInfoResponseDto user, String message) {
         Long userId = user.getUserId();
         String firstName = user.getFirstName();
         String lastName = user.getLastName();
@@ -29,21 +30,21 @@ public class UserServiceAspect {
 
     @AfterReturning(value = "execution(* com.example.online_shop.service.impl.UserServiceImpl.deleteUser(*))",
             returning = "user")
-    public void afterReturningWhenDeleted(UserResponseDto user) {
+    public void afterReturningWhenDeleted(UserInfoResponseDto user) {
         var message = "User with id = {}, firstName - {}, lastName - {}, email - {} was deleted.";
         logUserChanges(user, message);
     }
 
     @AfterReturning(value = "execution(* com.example.online_shop.service.impl.UserServiceImpl.editUser(*))",
             returning = "user")
-    public void afterReturningWhenEdited(UserResponseDto user) {
+    public void afterReturningWhenEdited(UserInfoResponseDto user) {
         var message = "User with id = {} was changed. New firstName - {}, lastName - {}, email - {}.";
         logUserChanges(user, message);
     }
 
     @AfterReturning(value = "execution(* com.example.online_shop.service.impl.UserServiceImpl.changeUserToAdmin(*))",
             returning = "user")
-    public void afterReturningWhenUserToAdmin(UserResponseDto user) {
+    public void afterReturningWhenUserToAdmin(UserInfoResponseDto user) {
         var message = "Role for user with id = {} changed from USER to ADMIN.";
         Long userId = user.getUserId();
         log.info(message, userId);

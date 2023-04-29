@@ -4,6 +4,7 @@ import com.example.online_shop.dto.requestDto.OrderRequestDto;
 import com.example.online_shop.dto.requestDto.OrderInfoRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
 import com.example.online_shop.dto.responseDto.OrderResponseDto;
+import com.example.online_shop.dto.responseDto.UserInfoResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.service.OrderService;
 import com.example.online_shop.service.UserService;
@@ -35,12 +36,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserResponseDto registerUser(@RequestBody @Valid UserRequestDto userRequestDto) {
+    public UserInfoResponseDto registerUser(@RequestBody @Valid UserRequestDto userRequestDto) {
         return userService.createUser(userRequestDto);
     }
 
     @PutMapping("/profile")
-    public UserResponseDto editProfile(@RequestBody @Valid UserRequestDto userRequestDto) {
+    public UserInfoResponseDto editProfile(@RequestBody @Valid UserRequestDto userRequestDto) {
         return userService.editUser(userRequestDto);
     }
 

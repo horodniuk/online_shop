@@ -2,6 +2,7 @@ package com.example.online_shop.controller;
 
 import com.example.online_shop.dto.requestDto.ProductRequestDto;
 import com.example.online_shop.dto.requestDto.UserRequestDto;
+import com.example.online_shop.dto.responseDto.UserInfoResponseDto;
 import com.example.online_shop.dto.responseDto.UserResponseDto;
 import com.example.online_shop.entity.Product;
 import com.example.online_shop.service.ProductService;
@@ -18,12 +19,12 @@ public class AdminController {
     private final ProductService productService;
 
     @DeleteMapping("/user/{id}")
-    public UserResponseDto deleteUser(@PathVariable("id") Long userId) {
+    public UserInfoResponseDto deleteUser(@PathVariable("id") Long userId) {
         return userService.deleteUser(userId);
     }
 
     @PostMapping("/user")
-    public UserResponseDto addUser(@RequestBody @Valid UserRequestDto userRequestDto) {
+    public UserInfoResponseDto addUser(@RequestBody @Valid UserRequestDto userRequestDto) {
         return userService.createUser(userRequestDto);
     }
 
@@ -44,7 +45,7 @@ public class AdminController {
 
     //method needs to be reviewed
     @PutMapping("/user")
-    public UserResponseDto blockUser(@RequestBody UserRequestDto userRequestDto) {
+    public UserInfoResponseDto blockUser(@RequestBody UserRequestDto userRequestDto) {
         return userService.editUser(userRequestDto);
     }
 
