@@ -1,0 +1,160 @@
+### superadmin - addAdmin  // Додавати
+POST http://localhost:8080/api/superadmin/admin
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic petrov@gmail.com 123
+
+{
+  "firstName": "admin",
+  "lastName": "admin",
+  "email": "admin3@gmail.com",
+  "password":"123",
+  "balance": 100.00
+}
+
+### superadmin - deleteAdmin  // видаляти адмінів
+DELETE http://localhost:8080/api/superadmin/admin/4
+Authorization: Basic petrov@gmail.com 123
+
+### superadmin - assignAdmin  // призначати нових
+PUT http://localhost:8080/api/superadmin/admin/1
+Authorization: Basic petrov@gmail.com 123
+
+### admin - addUser   // може створювати
+POST http://localhost:8080/api/admin/user
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic olegov@gmail.com 123
+
+{
+  "firstName": "Andrey",
+  "lastName": "Andreev",
+  "email": "andrey@gmail.com",
+  "password":"123",
+  "balance": 1000.00
+}
+
+### admin - blockUser   //блокує
+PUT http://localhost:8080/api/admin/user/block/6
+Authorization: Basic olegov@gmail.com 123
+
+### admin - unblockUser   //розблоковує
+PUT http://localhost:8080/api/admin/user/unblock/6
+Authorization: Basic olegov@gmail.com 123
+
+### admin - deleteUser  // Додавати продукти
+DELETE http://localhost:8080/api/admin/user/6
+Authorization: Basic olegov@gmail.com 123
+
+### admin - addProduct
+POST http://localhost:8080/api/admin/product
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic olegov@gmail.com 123
+
+{
+  "name": "tea",
+  "price": 5.00
+}
+
+### admin - deleteProduct  //видаляти продукти
+DELETE http://localhost:8080/api/admin/product/4
+Authorization: Basic olegov@gmail.com 123
+
+### admin - editProduct // оновлювати інфо про продукти
+PUT http://localhost:8080/api/admin/product
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic olegov@gmail.com 123
+
+{
+  "productId": "4",
+  "name": "cheese",
+  "price": 70.0
+}
+
+
+### user - addOrder // Додати продукт в заказ
+POST http://localhost:8080/api/user/order
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic ivanov@gmail.com 123
+
+{
+  "userId": 7,
+  "products": {
+    "1": 2,
+    "2": 1
+  }
+}
+
+### user - removeProductToOrder // видалити продукт з заказа
+DELETE http://localhost:8080/api/user/order
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic ivanov@gmail.com 123
+
+{
+  "userId": 1,
+  "orderId": 1,
+  "products": {
+    "1": 1
+  }
+}
+
+### user - findAllOrdersByUserId  // переглянути список ордерів у юзера
+GET http://localhost:8080/api/user/orders/1
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic ivanov@gmail.com 123
+
+###  user - findById  // переглянути конкретний ордер
+GET http://localhost:8080/api/user/order/8
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic ivanov@gmail.com 123
+
+
+###  user - registerUser   // Реєстрація
+POST http://localhost:8080/api/user/register
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic ivanov@gmail.com 123
+
+{
+"firstName": "new user",
+"lastName": "new user",
+"email": "user3@gmail.com",
+"password":"123"
+}
+
+
+###  user - editProfile // Оновити особистий профіль
+PUT http://localhost:8080/api/user/profile
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic ivanov@gmail.com 123
+
+{
+  "userId": 1,
+  "firstName": "Ivan2",
+  "lastName": "Ivanov2",
+  "email": "ivanov@gmail.com",
+  "password": "123",
+  "balance": 800
+}
+
+###  add - balance  // додати кошти на баланс
+PUT http://localhost:8080/api/user/balance
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic ivanov@gmail.com 123
+
+{
+  "userId": 7,
+  "balance": 2000
+}
+
+
+
+

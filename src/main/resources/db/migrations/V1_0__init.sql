@@ -1,40 +1,35 @@
-CREATE TABLE IF NOT EXISTS users
-(
-    user_id    serial primary key,
-    first_name varchar not null,
-    last_name  varchar not null,
-    email      varchar not null,
-    balance    decimal
+CREATE TABLE users(
+    user_id                 int  not null generated always as identity,
+    first_name              varchar not null,
+    last_name               varchar not null,
+    email                   varchar not null unique,
+    balance                 double precision,
+    password                varchar,
+    role                    varchar ,
+    is_blocked              boolean default false,
+    PRIMARY KEY (user_id)
 );
 
-CREATE TABLE IF NOT EXISTS user_cart
-(
-    cart_id   bigserial primary key,
-    user_id   bigint references users (user_id),
-    constraint fk_user_cart_user_id foreign key (user_id)
-        references users (user_id)
+CREATE TABLE products(
+    product_id              int  not null generated always as identity,
+    name                    varchar not null,
+    price                   double precision,
+    PRIMARY KEY (product_id)
 );
 
-CREATE TABLE IF NOT EXISTS products
-(
-    product_id bigserial primary key,
-    name       varchar(255),
-    price      numeric(19, 2)
+CREATE TABLE orders(
+    order_id                int  not null generated always as identity,
+    order_date              timestamp,
+    user_id                 int not null,
+    PRIMARY KEY (order_id),
+    FOREIGN KEY (user_id) references users (user_id)
 );
 
-CREATE TABLE IF NOT EXISTS orders
-(
-    order_id   serial primary key,
-    order_date timestamp,
-    cart_id    bigint references user_cart (cart_id),
-    constraint fk_order_cart_id foreign key (cart_id)
-        references user_cart (cart_id)
+CREATE TABLE order_product(
+    order_id                int not null,
+    product_id              int not null,
+    quantity                int,
+    PRIMARY KEY (order_id, product_id),
+    FOREIGN KEY (order_id) references orders (order_id),
+    FOREIGN KEY (product_id) references products (product_id)
 );
-
---fill products
-INSERT INTO products (name, price)
-VALUES ('Head First Java', 20.00),
-       ('Effective Java', 25.00),
-       ('Java Concurrency', 30.00),
-       ('Clean Code', 35.00),
-       ('Thinking in Java', 40.00);
